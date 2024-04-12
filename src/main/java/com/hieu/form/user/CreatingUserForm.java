@@ -1,14 +1,14 @@
 package com.hieu.form.user;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-
 import org.hibernate.validator.constraints.Length;
 
 import com.hieu.entity.User;
 import com.hieu.validation.user.EmailNotExists;
 import com.hieu.validation.user.UsernameNotExists;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -33,7 +33,7 @@ public class CreatingUserForm {
 	@Length(max = 50, message = "The email's length is max 100 characters")
 	private String address;
 	
-	@NotBlank(message = "The phone mustn't be null value")
+	@NotNull(message = "The phone mustn't be null value")
 	private Integer phone;
 	
 	@NotBlank(message = "The password mustn't be null value")

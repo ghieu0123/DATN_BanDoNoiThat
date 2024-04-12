@@ -4,22 +4,24 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -38,7 +40,7 @@ public class ShopOrder implements Serializable{
 	
 	@Column(name = "orderDate", nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
-//	@CreationTimestamp
+	@CreationTimestamp
 	private Date orderDate;
 	
 	@Column(name ="`totalPrice`", nullable = false)
@@ -47,14 +49,20 @@ public class ShopOrder implements Serializable{
 	@Column(name ="`addressShipping`", length = 100, nullable = false)
 	private String addressShipping;
 	
+	@Enumerated(EnumType.STRING)
 	@Column(name = "`orderStatus`", nullable = false)
 	private ShopOrderStatus orderStatus = ShopOrderStatus.NOT_PAY;
+	
+	@ManyToOne
+	@JoinColumn(name = "userId")
+	private User user;
 	
 	@OneToOne(mappedBy = "shopOrder")
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Payment payment;
-
+	
 	@OneToMany(mappedBy = "shopOrder")
 	@OnDelete(action = OnDeleteAction.CASCADE)
-	private List<ShoppingCart> shoppingCarts;
+	private List<ShopOrderItem> shopOrderItems;
+	
 }

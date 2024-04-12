@@ -1,12 +1,12 @@
 package com.hieu.validation.user;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
 import com.hieu.service.IUserService;
+
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 public class EmailNotExistsValidator implements ConstraintValidator<EmailNotExists, String>{
 

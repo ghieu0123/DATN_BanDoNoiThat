@@ -19,10 +19,10 @@ public class CategoryService implements ICategoryService{
 	@Autowired
 	private ICategoryRepository repository; 
 	
-//	@Override
-//	public Category findByCategoryName(String categoryName) {
-//		return repository.findByCategoryName(categoryName);
-//	}
+	@Override
+	public Category findByCategoryName(String categoryName) {
+		return repository.findByCategoryName(categoryName);
+	}
 
 	@Override
 	public Page<Category> getAllCategorys(Pageable pageable) {
@@ -43,7 +43,7 @@ public class CategoryService implements ICategoryService{
 	@Override
 	@Transactional
 	public void updateCategory(Integer id, UpdatingCategoryForm form) {
-	    Category categoryEntity = repository.getById(id);
+	    Category categoryEntity = repository.findById(id).get();
 	    
 	    String categoryName = categoryEntity.getCategoryName();
 	    

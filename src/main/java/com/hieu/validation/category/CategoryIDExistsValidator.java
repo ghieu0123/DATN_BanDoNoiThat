@@ -1,18 +1,18 @@
 package com.hieu.validation.category;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
-import com.hieu.service.IUserService;
+import com.hieu.service.ICategoryService;
+
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 
 public class CategoryIDExistsValidator implements ConstraintValidator<CategoryIDExists, Integer>{
 	
 	@Autowired
-	private IUserService userService;
+	private ICategoryService categoryService;
 
 	@SuppressWarnings("deprecation")
 	@Override
@@ -22,7 +22,7 @@ public class CategoryIDExistsValidator implements ConstraintValidator<CategoryID
 			return true;
 		}
 		
-		return userService.isUserExistsByID(id);
+		return categoryService.isCategoryExistsByID(id);
 	}
 
 }

@@ -1,7 +1,6 @@
 package com.hieu.form.category;
 
-import javax.validation.constraints.NotBlank;
-
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

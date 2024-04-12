@@ -6,15 +6,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.hieu.entity.User;
+import com.hieu.form.user.CreatingUserByAdminForm;
 import com.hieu.form.user.CreatingUserForm;
 import com.hieu.form.user.UpdatingUserForm;
 import com.hieu.form.user.UserFilterForm;
 import com.hieu.form.user.UpdatingUserByAdminForm;
 
 public interface IUserService{
-	public void Register(User user);
-
-	public void createUser(CreatingUserForm form);
 
 	public Page<User> getAllUsers(Pageable pageable, String search, UserFilterForm filter);
 
@@ -38,11 +36,23 @@ public interface IUserService{
 
 	public boolean existsUserByUsername(String userName);
 
-//	public void resetPasswordViaEmail(String email);
-//
-//	public void resetPassword(String token, String newPassword);
-//
-//	public void sendResetPasswordViaEmail(String email);
-
 	public void deleteUsers(List<Integer> ids);
+
+	void Register(User user);
+
+	void createUserByAdmin(CreatingUserByAdminForm form);
+
+	void sendResetPasswordViaEmail(String email);
+
+	void resetPasswordViaEmail(String email);
+
+	void resetPassword(String token, String newPassword);
+
+	void createNewRegistrationUserToken(User user);
+
+	void activeUser(String token);
+
+	void sendConfirmUserRegistrationViaEmail(String email);
+	
+	
 }

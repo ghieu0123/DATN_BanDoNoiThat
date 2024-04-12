@@ -33,7 +33,9 @@ public class UserDTO {
 	
 	private List<ShoppingCartDTO> shoppingCarts;
 	
-	private List<PaymentDTO> payments; 
+	private List<ShopOrderDTO>	shopOrders;
+	
+	private List<PaymentDTO> payments;
 	
 	@Data
 	@NoArgsConstructor
@@ -49,6 +51,16 @@ public class UserDTO {
 		private Integer id;
 		
 		private Date datePayment;
+	}
+	
+	@Data
+	@NoArgsConstructor
+	public static class ShopOrderDTO{
+		private Integer id;
+		
+		private Date orderDate;
+		
+		private Integer totalPrice;
 	}
 	
 	public User toEntity() {

@@ -11,7 +11,7 @@ import com.hieu.form.category.UpdatingCategoryForm;
 
 public interface ICategoryService {
 	
-//	public Category findByCategoryName (String categoryName);
+	public Category findByCategoryName (String categoryName);
 	
 	public Page<Category> getAllCategorys(Pageable pageable);
 	

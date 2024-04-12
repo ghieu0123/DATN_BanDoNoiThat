@@ -1,10 +1,9 @@
 package com.hieu.form.category;
 
-import javax.validation.constraints.NotBlank;
-
 import com.hieu.entity.Category;
 import com.hieu.validation.category.CategoryIDExists;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

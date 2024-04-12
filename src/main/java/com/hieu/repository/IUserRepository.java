@@ -1,6 +1,7 @@
 package com.hieu.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -12,7 +13,7 @@ public interface IUserRepository extends JpaRepository<User, Integer>, JpaSpecif
 	
 	public boolean existsByEmail(String email);
 	
-	public User findByUsername(String username);
+	public Optional<User> findByUsername(String username);
 	
 	public User findByEmail(String email);
 	
