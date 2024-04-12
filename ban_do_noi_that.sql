@@ -57,17 +57,18 @@ CREATE TABLE `ShopOrder`(
 	`orderDate`			DATE NOT NULL,
     `totalPrice`		INT NOT NULL,
     `addressShipping`	VARCHAR(100) NOT NULL,
-    `orderStatus`		BOOLEAN DEFAULT 0
+    `orderStatus`		ENUM('NOT_PAY','PAY') DEFAULT 'NOT_PAY',
+    `userId`			INT NOT NULL,
+    FOREIGN KEY (userId) REFERENCES User(id)
 );
 
 -- create table: ShoppingCart
 DROP TABLE IF EXISTS `ShoppingCart`;
 CREATE TABLE `ShoppingCart`(
 	`id`				INT AUTO_INCREMENT PRIMARY KEY,
-	`shopOrderId`		INT NOT NULL,
-    `userId`			INT NOT NULL,
-    FOREIGN KEY (`shopOrderId`) REFERENCES `ShopOrder`(`id`),
-    FOREIGN KEY (`userId`) REFERENCES `User`(`id`)
+    `userId`			INT,
+    `createdDate`		DATETIME NOT NULL DEFAULT NOW(),
+    FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE SET NULL
 );
 
 -- create table: ShoppingCartItem
@@ -76,9 +77,20 @@ CREATE TABLE `ShoppingCartItem`(
 	`id`				INT AUTO_INCREMENT PRIMARY KEY,
     `quantity`			INT UNSIGNED NOT NULL,
 	`productId`			INT NOT NULL,
-    `shoppingCartId`	INT NOT NULL,
+    `shoppingCartId`	INT,
     FOREIGN KEY (`productId`) REFERENCES `Product`(`id`),
-    FOREIGN KEY (`shoppingCartId`) REFERENCES `ShoppingCart`(`id`)
+    FOREIGN KEY (`shoppingCartId`) REFERENCES `ShoppingCart`(`id`) ON DELETE SET NULL
+);
+
+-- create table: ShoppingCartItem
+DROP TABLE IF EXISTS `ShopOrderItem`;
+CREATE TABLE `ShopOrderItem`(
+	`id`				INT AUTO_INCREMENT PRIMARY KEY,
+    `quantity`			INT UNSIGNED NOT NULL,
+	`productId`			INT NOT NULL,
+    `shopOrderId`		INT,
+    FOREIGN KEY (`productId`) REFERENCES `Product`(`id`),
+    FOREIGN KEY (`shopOrderId`) REFERENCES `ShopOrder`(`id`) ON DELETE SET NULL
 );
 
 -- create table: Payment
@@ -92,26 +104,44 @@ CREATE TABLE `Payment`(
     FOREIGN KEY (`userId`) REFERENCES `User`(`id`)
 );
 
+-- Create table Registration_User_Token
+DROP TABLE IF EXISTS 	`Registration_User_Token`;
+CREATE TABLE IF NOT EXISTS `Registration_User_Token` ( 	
+	id 				INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+	`token`	 		CHAR(36) NOT NULL UNIQUE,
+	`user_id` 		SMALLINT UNSIGNED NOT NULL,
+	`expiryDate` 	DATETIME NOT NULL
+);
+
+-- Create table Reset_Password_Token
+DROP TABLE IF EXISTS 	`Reset_Password_Token`;
+CREATE TABLE IF NOT EXISTS `Reset_Password_Token` ( 	
+	id 				INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+	`token`	 		CHAR(36) NOT NULL UNIQUE,
+	`user_id` 		SMALLINT UNSIGNED NOT NULL,
+	`expiryDate` 	DATETIME NOT NULL
+);
+
 INSERT INTO `User` (`username`, `email`, `password`, `address`, `phone`, `firstName`, `lastName`, `role`, `status`)
 VALUES 
-('ghieu0123', 'ghieu0123@gmail.com', '123456', 'tp.Bac Ninh', 123456789, 'Hieu', 'Nguyen', 'ADMIN', 1),
-('duchao', 'duchao@gmail.com', '123456', 'Tien du, Bac Ninh', 987654321, 'Hao', 'Nguyen', 'USER', 1),
-('phanphong', 'phanphong@gmail.com', '123456', 'Lao Cai', 987654321, 'Phong', 'Phan', 'USER', 1),
-('sontung', 'sontung@gmail.com', '123456', 'Luc Nam, Bac Giang', 123456789, 'tung', 'Nguyen', 'USER', 1),
-('vuhai', 'vuhai@gmail.com', '123456', 'Tien du, Bac Ninh', 987654321, 'Hai', 'Vu', 'ADMIN', 1);
+('ghieu0123', 'ghieu0123@gmail.com', '$2a$10$W2neF9.6Agi6kAKVq8q3fec5dHW8KUA.b0VSIGdIZyUravfLpyIFi', 'tp.Bac Ninh', 123456789, 'Hieu', 'Nguyen', 'ADMIN', 1),
+('duchao', 'duchao@gmail.com', '$2a$10$W2neF9.6Agi6kAKVq8q3fec5dHW8KUA.b0VSIGdIZyUravfLpyIFi', 'Tien du, Bac Ninh', 987654321, 'Hao', 'Nguyen', 'MANAGER', 1),
+('phanphong', 'phanphong@gmail.com', '$2a$10$W2neF9.6Agi6kAKVq8q3fec5dHW8KUA.b0VSIGdIZyUravfLpyIFi', 'Lao Cai', 987654321, 'Phong', 'Phan', 'USER', 1),
+('sontung', 'sontung@gmail.com', '$2a$10$W2neF9.6Agi6kAKVq8q3fec5dHW8KUA.b0VSIGdIZyUravfLpyIFi', 'Luc Nam, Bac Giang', 123456789, 'tung', 'Nguyen', 'USER', 1),
+('vuhai', 'vuhai@gmail.com', '$2a$10$W2neF9.6Agi6kAKVq8q3fec5dHW8KUA.b0VSIGdIZyUravfLpyIFi', 'Tien du, Bac Ninh', 987654321, 'Hai', 'Vu', 'ADMIN', 1);
 
 INSERT INTO `Category` (`categoryName`)
 VALUES 
-('Phòng ngủ'),
-('Phòng ăn'),
-('Phòng khách');
+('Bedroom'),
+('DiningRoom'),
+('LivingRoom');
 
 INSERT INTO `Type` (`typeName`)
 VALUES 
 ('Giường'),
 ('Đèn'),
 ('Tủ'),
-('Ghế'),
+('Ghế'),                                   
 ('Bàn'),
 ('Sofa');
 
@@ -136,23 +166,31 @@ VALUES
 ('Tủ Buffet', 'Osaka', 'Small', 3, 'Adorable teddy bear for children', 'Plush', 10, 'teddybear.jpg', 3);
 
 
-INSERT INTO `ShopOrder` (`orderDate`, `totalPrice`, `addressShipping`, `orderStatus`)
+INSERT INTO `ShopOrder` (`orderDate`, `totalPrice`, `addressShipping`, `orderStatus`, `userId`)
 VALUES 
-('2024-01-05', 100, 'Hap Linh, Bac Ninh', 1),
-('2024-01-21', 50, 'Hap Linh, Bac Ninh', 1),
-('2024-02-22', 200, 'tp. Bac Ninh', 1),
-('2024-02-23', 75, 'tp. Bac Giang', 1),
-('2024-03-20', 150, 'Ha Noi', 1);
+('2024-01-05', 100, 'Hap Linh, Bac Ninh', 'PAY', 1),
+('2024-01-21', 50, 'Hap Linh, Bac Ninh', 'NOT_PAY', 1),
+('2024-02-22', 200, 'tp. Bac Ninh', 'PAY', 2),
+('2024-02-23', 75, 'tp. Bac Giang', 'NOT_PAY', 3),
+('2024-03-20', 150, 'Ha Noi', 'NOT_PAY', 4);
 
-INSERT INTO `ShoppingCart` (`shopOrderId`, `userId`)
+INSERT INTO `ShoppingCart` (`userId`, `createdDate`)
 VALUES 
-(1, 1),
-(2, 1),
-(3, 3),
-(4, 4),
-(5, 5);
+(1, '2024-01-05'),
+(1, '2024-02-05'),
+(3, '2024-03-05'),
+(4, '2024-04-05'),
+(5, '2024-05-05');
 
 INSERT INTO `ShoppingCartItem` (`quantity`, `productId`, `shoppingCartId`)
+VALUES 
+(2, 1, 1),
+(1, 2, 1),
+(3, 3, 3),
+(1, 4, 4),
+(2, 5, 5);
+
+INSERT INTO `ShopOrderItem` (`quantity`, `productId`, `shopOrderId`)
 VALUES 
 (2, 1, 1),
 (1, 2, 1),
