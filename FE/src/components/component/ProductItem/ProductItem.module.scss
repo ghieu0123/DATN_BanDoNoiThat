@@ -1,0 +1,23 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  padding: 6px 16px;
+
+  &:hover {
+    background-color: rgba(22, 24, 35, 0.1);
+    cursor: pointer;
+  }
+}
+
+.icon {
+  // flex: 1;
+  // margin-left: 12px;
+  margin-right: 5px;
+  font-size: 15px;
+  color: #658cff;
+}
+
+.check {
+}
+.productname {
+}

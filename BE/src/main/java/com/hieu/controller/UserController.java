@@ -74,6 +74,16 @@ public class UserController {
 
 		return new ResponseEntity<>(dto, HttpStatus.OK);
 	}
+	
+	@GetMapping(value = "/getbyname/{username}")
+	public ResponseEntity<?> getUserByUsername(@PathVariable(name = "username")  String name) {
+
+		User entity = service.findUserByUsername(name);
+
+		UserDTO dto = modelMapper.map(entity, UserDTO.class);
+
+		return new ResponseEntity<>(dto, HttpStatus.OK);
+	}
 
 	@GetMapping(value = "/id/{id}")
 	public ResponseEntity<?> existsByID(@PathVariable(name = "id") Integer id) {

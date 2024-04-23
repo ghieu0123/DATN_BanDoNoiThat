@@ -14,5 +14,7 @@ public interface IShoppingCartService {
 
 	public void decreaseProductQuantityInCart(Integer shoppingCartId, Integer productId);
 	
+	public void deleteProductFromCart(Integer shoppingCartId, Integer productId);
+	
 	public void deleteShoppingCart(Integer cartId);
 }

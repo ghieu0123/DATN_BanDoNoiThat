@@ -1,0 +1,50 @@
+.wrapper {
+  height: var(--default-layout-header-height);
+  box-shadow: 0px 1px 1px rgb(0 0 0 / 12%);
+  width: 100%;
+  background-color: bisque;
+  display: flex;
+  z-index: 100;
+}
+.content {
+  display: flex;
+}
+.action {
+  position: absolute;
+  display: flex;
+  right: 0;
+  padding: 0 10px;
+  padding-top: 5px;
+}
+
+.buttons {
+  font-size: 15px;
+  padding: 0 10px;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  background: none;
+  &:focus {
+    text-decoration: underline;
+    border: none;
+    outline: none;
+  }
+  &:hover {
+    text-decoration: underline;
+    border: none;
+    outline: none;
+    color: #8b8a8a;
+  }
+}
+
+.btn-a {
+  &:hover {
+    color: #8b8a8a;
+  }
+}
+
+.sign-out-btn {
+  &:hover {
+    color: var(--toastify-color-error);
+  }
+}

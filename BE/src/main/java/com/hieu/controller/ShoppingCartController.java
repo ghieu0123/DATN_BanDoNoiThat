@@ -59,7 +59,7 @@ public class ShoppingCartController {
 	}
 	
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<?> createShoppingCart(@PathVariable(name = "id") Integer shoppingCartId, @RequestParam(name = "productId") Integer productId){
+	public ResponseEntity<?> updateShoppingCart(@PathVariable(name = "id") Integer shoppingCartId, @RequestParam(name = "productId") Integer productId){
 		service.addProductToShoppingCart(shoppingCartId, productId);
 		return new ResponseEntity<>("Update cart successfully!!", HttpStatus.OK);
 	}
@@ -74,6 +74,13 @@ public class ShoppingCartController {
 		service.decreaseProductQuantityInCart(shoppingCartId, productId);
 		return new ResponseEntity<>("Update cart successfully!!", HttpStatus.OK);
 	}
+	
+	@PutMapping(value = "/delete/{id}")
+	public ResponseEntity<?> deleteProductInCart(@PathVariable(name = "id") Integer shoppingCartId, @RequestParam(name = "productId") Integer productId){
+		service.deleteProductFromCart(shoppingCartId, productId);
+		return new ResponseEntity<>("Update cart successfully!!", HttpStatus.OK);
+	}
+	
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<?> deleteShoppingCart(@PathVariable(name = "id") Integer cartId) {
 		service.deleteShoppingCart(cartId);

@@ -1,0 +1,18 @@
+.content {
+  font-size: 20px;
+  font-weight: 700;
+  min-width: 100px;
+  padding: 9px 16px;
+  background-color: transparent;
+  border: none;
+  color: #303036;
+  &:focus {
+    border: none;
+    outline: none;
+    text-decoration: none;
+  }
+  &:hover {
+    color: #fcb900;
+    text-decoration: none;
+  }
+}

@@ -147,7 +147,7 @@ VALUES
 
 INSERT INTO `Product` (`name`, `collection`, `size`, `typeId`, `description`, `material`, `price`, `image`, `categoryId`)
 VALUES 
-('Giường ngủ bọc vải Pio 1m8', 'Pio', 'D2000- R1800- C1000 mm', 1, 'Giường ngủ bọc vải Pio được thiết kế...', 'Gỗ Beech- Bọc vải', 21136000, 'image', 1),
+('Giường ngủ bọc vải Pio 1m8', 'Pio', 'D2000- R1800- C1000 mm', 1, 'Giường ngủ bọc vải Pio 1m8 màu 10/WV094 được thiết kế bọc vải hoàn toàn với khung gỗ beech chắc chắn. Những chi tiết nhấn nhá tại đầu giường, gối đầu giường giúp nó trở nên lạ mắt và ấn tượng. Sử dụng chân thon gọn giúp phòng ngủ của bạn trở nên thông thoáng và thanh lịch hơn. Giường Pio là một lựa chọn sáng giá cho không gian phòng ngủ Bắc Âu- Hiện đại, với 2 kích thước lựa chọn: 1m6, 1m8, có các màu vải khác nhau để lựa chọn.', 'Gỗ Beech- Bọc vải', 21136000, 'https://upfilemienphi.com/secure/file/DM2BGwdNbmj40', 1),
 ('Giường ngủ gỗ Victoria 1m6', 'Victoria', 'D2000 - R1600 - C1160', 1, 'Giường ngủ gỗ với màu trắng nhẹ nhàng...', 'Gỗ Sồi kết hợp MDF veneer', 27115000, 'image', 1),
 ('Bàn đầu giường Pio', 'Pio', 'D500- R400 - C550', 5, 'Bàn đầu giường Pio giúp tạo điểm nhấn...', 'Gỗ Beech+ MDF Veneer thông', 5015000, 'image', 1),
 ('Đèn bàn Aria Marb Nickel', 'Nickel', 'D420 - R220 - C600mm', 2, 'Đèn bàn, đèn trang trí phòng khách, phòng ngủ...', 'Chụp vải - chân niken, đá marble', 15600000, 'image', 1),

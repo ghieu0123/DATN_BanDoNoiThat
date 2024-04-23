@@ -122,6 +122,22 @@ public class ShoppingCartService implements IShoppingCartService {
 		}
 	}
 	
+	public void deleteProductFromCart(Integer shoppingCartId, Integer productId) {
+		ShoppingCart shoppingCart = repository.findById(shoppingCartId).orElse(null);
+		Product product = productRepository.findById(productId).orElse(null);
+		
+		List<ShoppingCartItem> cartItems = new ArrayList<ShoppingCartItem>();
+		for(ShoppingCartItem item: shoppingCart.getShoppingCartItems()) {
+			if(item.getProduct().getId() != product.getId()) {
+				cartItems.add(item); 
+			} else {
+				shoppingCartItemRepository.delete(item);
+			}
+		}
+		shoppingCart.setShoppingCartItems(cartItems);
+		repository.save(shoppingCart);
+	}
+	
 	public void deleteShoppingCart(Integer cartId) {
 		repository.deleteById(cartId);
 	}

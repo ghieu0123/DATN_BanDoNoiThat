@@ -33,7 +33,8 @@ public class JwtUtil {
         return claimsResolver.apply(claims);
     }
 
-    private Claims extractAllClaims(String token) {
+    @SuppressWarnings("deprecation")
+	private Claims extractAllClaims(String token) {
         return Jwts.parser().setSigningKey(getSignKey()).parseClaimsJws(token).getBody();
     }
 
@@ -61,7 +62,7 @@ public class JwtUtil {
                 .setClaims(claims)
                 .setSubject(username)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis()+1000*60*30))
+                .setExpiration(new Date(System.currentTimeMillis()+1000*60*60))
                 .signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
     }
 

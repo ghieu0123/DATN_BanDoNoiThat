@@ -6,6 +6,7 @@ import java.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -50,9 +51,13 @@ public class WebSecurityConfig   {
                     .cors(withDefaults())
                     .csrf(AbstractHttpConfigurer::disable)
                     .authorizeHttpRequests((request) -> request
-                            .requestMatchers("/api/v1/auth/**", "/api/v1/signup/**", "/api/v1/users/**").permitAll()
-                            .requestMatchers("/api/v1/products/**").hasAnyAuthority("ADMIN", "MANAGER")
-//                          .anyRequest().hasAnyAuthority("USER"))
+                            .requestMatchers("/api/v1/auth/**",
+                            				"/api/v1/signup/**",
+                            				"/api/v1/users/**",
+                            				"/api/v1/products/**").permitAll()
+                            .requestMatchers(HttpMethod.POST, "/api/v1/products/**").hasAnyAuthority("ADMIN", "MANAGER")
+                            .requestMatchers(HttpMethod.PUT, "/api/v1/products/**").hasAnyAuthority("ADMIN", "MANAGER")
+//                          .anyRequest().hasAnyAuthority("USER")
                             .anyRequest().permitAll())
                     .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
