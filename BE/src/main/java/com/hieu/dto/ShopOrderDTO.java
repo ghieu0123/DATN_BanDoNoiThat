@@ -18,6 +18,8 @@ public class ShopOrderDTO {
 	private Integer totalPrice;
 
 	private ShopOrderStatus orderStatus;
+	
+	private String addressShipping;
 
 	private UserDTO user;
 

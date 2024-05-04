@@ -59,11 +59,14 @@ public class ShopOrderController {
 	}
 	
 	@GetMapping(value = "/user")
-	public ResponseEntity<?> getAllShopOrderByUser(Authentication authentication, @PageableDefault(sort = { "id" }, direction = Sort.Direction.ASC) Pageable pageable) {
+	public ResponseEntity<?> getAllShopOrderByUser(Authentication authentication,
+			@PageableDefault(sort = { "id" }, direction = Sort.Direction.ASC) Pageable pageable,
+			@RequestParam(value = "filter", required = false) String filter
+			) {
 		String username = authentication.getName();
 
 		User myUser = userService.findUserByUsername(username);
-		Page<ShopOrder> entityPages = service.getAllShopOrdersByUser(myUser, pageable);
+		Page<ShopOrder> entityPages = service.getAllShopOrdersByUser(myUser, filter, pageable);
 
 		List<ShopOrderDTO> dtos = modelMapper.map(entityPages.getContent(), new TypeToken<List<ShopOrderDTO>>() {
 		}.getType());

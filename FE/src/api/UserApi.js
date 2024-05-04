@@ -67,19 +67,19 @@ const getProfile = () => {
 
 const createAccountFromAdmin = (values) => {
   const body = {
-    firstName: values.firstName,
-    lastName: values.lastName,
     username: values.username,
     email: values.email,
-    password: values.password,
+    password: values.password === null ? '' : values.password,
     address: values.address,
     phone: values.phone,
+    firstName: values.firstName,
+    lastName: values.lastName,
     role: values.role,
   };
 
   return Api.post(`${url}/byAdmin`, body);
 };
-const getAllUsers = (page = 1, size = 10, sortField = 'id', sortType = 'desc', search = '') => {
+const getAllUsers = (page = 1, size = 10, sortField = 'id', sortType = 'desc', search = '', role) => {
   const parameters = {
     page,
     size,
@@ -88,6 +88,9 @@ const getAllUsers = (page = 1, size = 10, sortField = 'id', sortType = 'desc', s
   // search
   if (search) {
     parameters.search = search;
+  }
+  if (role) {
+    parameters.role = role;
   }
 
   return Api.get(`${url}`, { params: parameters });
@@ -105,13 +108,14 @@ const updateUser = (id, address, phone, firstName, lastName) => {
   };
   return Api.put(`${url}/${id}`, body);
 };
-const updateByAdmin = (id, address, phone, firstName, lastName, role) => {
+const updateByAdmin = (id, values) => {
   const body = {
-    address,
-    phone,
-    firstName,
-    lastName,
-    role,
+    firstName: values.firstName,
+    lastName: values.lastName,
+    address: values.address,
+    phone: values.phone,
+    password: values.password,
+    role: values.role,
   };
   return Api.put(`${url}/admin/${id}`, body);
 };

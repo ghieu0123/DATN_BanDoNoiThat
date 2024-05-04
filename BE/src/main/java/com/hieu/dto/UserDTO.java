@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.hieu.entity.Role;
 import com.hieu.entity.User;
+import com.hieu.entity.UserStatus;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,6 +31,8 @@ public class UserDTO {
 	private String lastName;
 	
 	private Role role;
+	
+	private UserStatus userStatus;
 	
 	private List<ShoppingCartDTO> shoppingCarts;
 	

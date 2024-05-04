@@ -2,28 +2,45 @@ import styles from './scss/SideBar.module.scss';
 import classNames from 'classnames/bind';
 import images from '../../assets/logo/index';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleXmark } from '@fortawesome/free-regular-svg-icons';
-import { faMagnifyingGlass, faCartShopping } from '@fortawesome/free-solid-svg-icons';
-import Tippy from '@tippyjs/react/headless';
+import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
 import { useEffect, useState } from 'react';
-import { Wrapper as PopperWrapper } from './popper/index';
-import ProductItem from './ProductItem';
 import Button from './button/Button';
 import Cart from './cart/Cart';
 import { Fragment } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import storage from '../../storage/Storage';
+import { useNavigate } from 'react-router-dom';
+import Search from './search/Search';
+import { getCategoryAction } from '../../redux/actions/ProductAction';
+import { selectCategory } from '../../redux/selectors/ProductSelector';
+import { connect } from 'react-redux';
+import { height } from '@fortawesome/free-brands-svg-icons/fa42Group';
 
 const cx = classNames.bind(styles);
 
-function SideBar() {
-  const [searchResult, setSearchResults] = useState([]);
+function SideBar(props) {
   const [isOpen, setOpen] = useState(false);
+  const navigate = useNavigate();
+  let location = useLocation();
 
-  useEffect(() => {
-    setTimeout(() => {
-      setSearchResults([1, 2, 3]);
-    }, 0);
-  }, []);
+  const url = location.search;
+  const url2 = location.pathname;
+  const parts = url.split('=');
+  const parts2 = url2.split('/');
+  let lastSegment = parts2.pop();
+  const categoryData = decodeURIComponent(parts[1]);
+
+  const backGroundstyle = {
+    height: '100%',
+    // backgroundColor: '#565656',
+    color: '#fcc100',
+  };
+  const nonStyle = {};
+
+  const isAuthenticated = () => {
+    return storage.getToken() !== null && storage.getToken() !== undefined;
+  };
+  useEffect(() => {}, [categoryData]);
 
   return (
     <div className={cx('side-bar')}>
@@ -32,45 +49,48 @@ function SideBar() {
           <img src={images.logo} alt="Nha Dep"></img>
         </Link>
         <div className={cx('action')}>
+          <Button
+            style={categoryData === 'undefined' && lastSegment === 'products' ? backGroundstyle : nonStyle}
+            to={'/products'}
+            onClick={() => {
+              console.log(lastSegment);
+            }}
+          >
+            <span>Sản phẩm</span>
+          </Button>
           {/* PRODUCT BY ROOM */}
-          <Button>
+          <Button
+            style={categoryData === 'LivingRoom' ? backGroundstyle : nonStyle}
+            to={'/products/category?category=LivingRoom'}
+            onClick={() => {
+              console.log(categoryData);
+            }}
+          >
             <span>Living Room</span>
           </Button>
-          <Button to={'/'}>
+          <Button
+            style={categoryData === 'DiningRoom' ? backGroundstyle : nonStyle}
+            to={'/products/category?category=DiningRoom'}
+            onClick={() => {
+              // getCategory('DiningRoom');
+            }}
+          >
             <span>Dining Room</span>
           </Button>
-          <Button>
+          <Button
+            style={categoryData === 'Bedroom' ? backGroundstyle : nonStyle}
+            to={'/products/category?category=Bedroom'}
+            onClick={() => {
+              // getCategory('Bedroom');
+            }}
+          >
             <span>Bed Room</span>
           </Button>
         </div>
-        <Tippy
-          interactive
-          // visible={searchResult.length > 0}
-          render={(attrs) => (
-            <div className={cx('search-result')} tabIndex="-1" {...attrs}>
-              <PopperWrapper>
-                <h4 className={cx('search-title')}>Products</h4>
-                <ProductItem />
-                <ProductItem />
-                <ProductItem />
-                <ProductItem />
-              </PopperWrapper>
-            </div>
-          )}
-        >
-          <div className={cx('search')}>
-            <input placeholder="Tìm sản phẩm" spellCheck={false} />
-            <button className={cx('clear')}>
-              <FontAwesomeIcon icon={faCircleXmark} />
-            </button>
-            {/* <FontAwesomeIcon className={cx('loading')} icon={faSpinner} /> */}
-            <button className={cx('search-btn')}>
-              <FontAwesomeIcon icon={faMagnifyingGlass} />
-            </button>
-          </div>
-        </Tippy>
+        {/* Search */}
+        <Search />
         {/* CART */}
-        <Button onClick={() => setOpen(!isOpen)}>
+        <Button onClick={() => (!isAuthenticated() ? navigate('/sign-in') : setOpen(!isOpen))}>
           <FontAwesomeIcon icon={faCartShopping} />
           <span>Cart</span>
         </Button>

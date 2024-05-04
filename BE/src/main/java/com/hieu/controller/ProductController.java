@@ -48,8 +48,9 @@ public class ProductController {
 			@PageableDefault(sort = { "id" }, direction = Sort.Direction.ASC) Pageable pageable,
 			@RequestParam(value = "search", required = false) String search,
 			@RequestParam(value = "category", required = false) String category,
-			@RequestBody(required = false) ProductFilterForm filter) {
-		Page<Product> entityPages = service.getAllProducts(pageable, search, category, filter);
+			@RequestParam(value = "type",required = false) String type) {
+		ProductFilterForm newForm = new ProductFilterForm(type);
+		Page<Product> entityPages = service.getAllProducts(pageable, search, category, newForm);
 
 		List<ProductDTO> dtos = modelMapper.map(entityPages.getContent(), new TypeToken<List<ProductDTO>>() {
 		}.getType());

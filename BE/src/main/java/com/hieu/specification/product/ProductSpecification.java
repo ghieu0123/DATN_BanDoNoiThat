@@ -28,7 +28,10 @@ public class ProductSpecification {
 		if (!StringUtils.isEmpty(search)) {
 			search = search.trim();
 			CustomSpecification name = new CustomSpecification("name", search);
-			where = where.and(name);
+			CustomSpecification size = new CustomSpecification("size", search);
+			CustomSpecification collection = new CustomSpecification("collection", search);
+			CustomSpecification material = new CustomSpecification("material", search);
+			where = where.and((name).or(size).or(collection).or(material));
 		}
 		//Category
 		if (!StringUtils.isEmpty(category)) {
@@ -77,6 +80,17 @@ class CustomSpecification implements Specification<Product>{
 		    Expression<String> categoryNameExpression = root.get("category").get("categoryName");
 
 		    return criteriaBuilder.equal(categoryNameExpression, value.toString());
+		}
+		if (field.equalsIgnoreCase("size")) {
+			return criteriaBuilder.like(root.get("size"), "%" + value.toString() + "%");
+		}
+
+		if (field.equalsIgnoreCase("collection")) {
+			return criteriaBuilder.like(root.get("collection"), "%" + value.toString() + "%");
+		}
+
+		if (field.equalsIgnoreCase("material")) {
+			return criteriaBuilder.like(root.get("material"), "%" + value.toString() + "%");
 		}
 		
 		if(field.equalsIgnoreCase("type")) {

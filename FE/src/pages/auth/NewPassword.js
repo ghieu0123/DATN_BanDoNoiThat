@@ -80,7 +80,7 @@ const NewPassword = (props) => {
       >
         {({ isSubmitting }) => (
           <Card>
-            <CardBody>
+            <CardBody className="auth">
               <div className="m-sm-4">
                 <Form>
                   <FormGroup>
@@ -106,7 +106,7 @@ const NewPassword = (props) => {
                   </FormGroup>
 
                   <div className="text-center mt-3">
-                    <Button type="submit" color="primary" size="lg" disabled={isSubmitting}>
+                    <Button type="submit" className='white-btn' size="lg" disabled={isSubmitting}>
                       Reset password
                     </Button>
                   </div>

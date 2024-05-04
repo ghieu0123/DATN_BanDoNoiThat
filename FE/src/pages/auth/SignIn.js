@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import '../../css/classic.css';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
+import '../../css/class.css';
 import { Button, Card, CardBody, FormGroup, CustomInput, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { ReactstrapInput } from 'reactstrap-formik';
 import { FastField, Form, Formik, Field, ErrorMessage } from 'formik';
@@ -28,12 +28,26 @@ const handleShowErrorNotification = () => {
   });
 };
 
-const SignIn = (props) => {
+const handleShowSuccessotification = () => {
+  toast.success('Login successfully!', {
+    toastId: 'login-success', // Đặt một toastId cụ thể
+    position: 'top-right',
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+  });
+};
+
+const SignIn = (pathname) => {
   const [isOpenModal, setOpenModal] = useState(false);
   const [email, setEmail] = useState('');
   const [isDisableResendButton, setDisableResendButton] = useState(false);
   const [isRememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleButtonClick = () => {
     setOpenModal(false);
@@ -112,6 +126,7 @@ const SignIn = (props) => {
                   setOpenModal(true);
                   setEmail(userResult.email);
                 } else {
+                  handleShowSuccessotification();
                   Storage.setUserInfo(user);
                   navigate('/');
                 }
@@ -136,7 +151,7 @@ const SignIn = (props) => {
       >
         {({ isSubmitting }) => (
           <Card>
-            <CardBody>
+            <CardBody className="auth">
               <div className="m-sm-4">
                 <div className="text-center">
                   <img src={logo} alt="Chris Wood" className="img-fluid rounded-circle" width="132" height="132" />
@@ -195,7 +210,7 @@ const SignIn = (props) => {
 
                   {/* submit */}
                   <div className="text-center mt-3">
-                    <Button type="submit" color="primary" size="lg" disabled={isSubmitting}>
+                    <Button type="submit" className="white-btn" size="lg" disabled={isSubmitting}>
                       Sign in
                     </Button>
                   </div>
@@ -222,7 +237,7 @@ const SignIn = (props) => {
         <ModalFooter>
           {/* resend */}
           <Button
-            color="primary"
+            className="black-btn"
             onClick={resendEmailToActiveAccount}
             style={{ marginLeft: 10 }}
             disabled={isDisableResendButton}
@@ -231,7 +246,7 @@ const SignIn = (props) => {
           </Button>
 
           {/* close button */}
-          <Button color="primary" onClick={() => handleButtonClick()}>
+          <Button className="white-btn" onClick={() => handleButtonClick()}>
             Close
           </Button>
         </ModalFooter>

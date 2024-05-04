@@ -20,7 +20,7 @@
 .buttons {
   font-size: 15px;
   padding: 0 10px;
-  text-decoration: none;
+  text-decoration: none !important;
   cursor: pointer;
   border: none;
   background: none;
@@ -30,7 +30,7 @@
     outline: none;
   }
   &:hover {
-    text-decoration: underline;
+    text-decoration: none !important;
     border: none;
     outline: none;
     color: #8b8a8a;
@@ -38,6 +38,8 @@
 }
 
 .btn-a {
+  text-decoration: none !important;
+
   &:hover {
     color: #8b8a8a;
   }

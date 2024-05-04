@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hieu.dto.ProfileDTO;
 import com.hieu.dto.UserDTO;
 import com.hieu.entity.User;
+import com.hieu.form.product.ProductFilterForm;
 import com.hieu.form.user.CreatingUserByAdminForm;
 import com.hieu.form.user.CreatingUserForm;
 import com.hieu.form.user.UpdatingUserByAdminForm;
@@ -53,9 +54,9 @@ public class UserController {
 	public ResponseEntity<?> getAllUsers(
 			@PageableDefault(sort = { "id" }, direction = Sort.Direction.ASC) Pageable pageable,
 			@RequestParam(value = "search", required = false) String search,
-			@RequestBody(required = false) UserFilterForm filter) {
-
-		Page<User> entityPages = service.getAllUsers(pageable, search, filter);
+			@RequestParam(value = "role", required = false) String role) {
+		
+		Page<User> entityPages = service.getAllUsers(pageable, search, role);
 
 		List<UserDTO> dtos = modelMapper.map(entityPages.getContent(), new TypeToken<List<UserDTO>>() {
 		}.getType());
@@ -111,8 +112,10 @@ public class UserController {
 	}
 
 	@DeleteMapping(value = "/{ids}")
-	public ResponseEntity<?> deleteUsers(@PathVariable(name = "ids") List<Integer> ids) {
-		service.deleteUsers(ids);
+	public ResponseEntity<?> deleteUsers(Authentication authentication, @PathVariable(name = "ids") List<Integer> ids) {
+		String username = authentication.getName();
+		User user = service.findUserByUsername(username);
+		service.deleteUsers(user.getId(), ids);
 		return new ResponseEntity<>("Delete Successfully!", HttpStatus.OK);
 	}
 

@@ -23,7 +23,7 @@ public class ShoppingCartDTO{
 	@Data
 	@NoArgsConstructor
 	public static class ShoppingCartItemDTO {
-		private String quantity;
+		private Integer quantity;
 		
 		private ProductDTO product;
 	}
@@ -33,6 +33,12 @@ public class ShoppingCartDTO{
 		private Integer id;
 		
 		private String name;
+		
+		private String collection;
+		
+		private String material;
+		
+		private String size;
 		
 		private Integer price;
 		

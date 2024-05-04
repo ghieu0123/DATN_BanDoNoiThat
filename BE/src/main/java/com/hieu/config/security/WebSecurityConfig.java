@@ -57,6 +57,10 @@ public class WebSecurityConfig   {
                             				"/api/v1/products/**").permitAll()
                             .requestMatchers(HttpMethod.POST, "/api/v1/products/**").hasAnyAuthority("ADMIN", "MANAGER")
                             .requestMatchers(HttpMethod.PUT, "/api/v1/products/**").hasAnyAuthority("ADMIN", "MANAGER")
+                            .requestMatchers(HttpMethod.DELETE, "/api/v1/products/**").hasAnyAuthority("ADMIN", "MANAGER")
+                            .requestMatchers(HttpMethod.DELETE, "/api/v1/user/**").hasAnyAuthority("ADMIN")
+                            .requestMatchers("/api/v1/users/admin/**").hasAnyAuthority("ADMIN")
+//                           .requestMatchers(HttpMethod.GET, "/api/v1/products/**").hasAnyAuthority("ADMIN", "MANAGER", "USER")
 //                          .anyRequest().hasAnyAuthority("USER")
                             .anyRequest().permitAll())
                     .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

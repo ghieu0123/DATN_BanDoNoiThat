@@ -7,10 +7,17 @@ import 'react-toastify/dist/ReactToastify.css';
 import Storage from '../../storage/Storage';
 import { TextInfor } from '../../custom_/Text';
 import { Card, Modal, ModalBody, ModalFooter, ModalHeader, Button, Col, Container, Row } from 'reactstrap';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import FormatPrice from '../../components/checkprice/FormatPrice';
+import ShoppingCartApi from '../../api/ShoppingCartApi';
+import { selectCartItems } from '../../redux/selectors/CartSelector';
+import { selectIsPurchase, selectPurchaseItem } from '../../redux/selectors/PurchaseSelector';
+import { connect } from 'react-redux';
+import { getCartItemAction } from '../../redux/actions/CartAction';
+import { getPurchaseAction } from '../../redux/actions/PurchaseAction';
+
 //CSS
 // import '../../css/General.scss';
-
 const label_width = 3;
 const input_width = {
   name: 9,
@@ -47,24 +54,32 @@ const handleShowSuccessNotification = (message) => {
     progress: undefined,
   });
 };
-
-const productId = 1;
-
-function ProductInfo(props) {
+const ProductInfo = function ProductInfo(props) {
   const [isOpenModal, setOpenModal] = useState(false);
   const [isOpenModal2, setOpenModal2] = useState(false);
   const [productInfo, setProductInfo] = useState([]);
   const [quantity, setQuantity] = useState(1);
-
+  const [checkToken, setCheckToken] = useState(Storage.getToken());
   const navigate = useNavigate();
 
-  const checkToken = Storage.getToken();
+  const getCartItem = props.getCartItemAction;
+  const cartData = props.cartItems;
+  const getPurchase = props.getPurchaseAction;
+  const isPurchase = props.isPurchase;
+  const purchaseItem = props.purchaseItem;
+
+  let location = useLocation();
+
+  let productId = location.pathname;
+  productId = productId.split('/').slice(-1)[0];
+
+  let itemPurchase = [{ quantity: quantity, product: product }];
 
   const handleQuantity = (event) => {
     const newQuantity = parseInt(event.target.value);
 
     // Kiểm tra nếu giá trị mới nhỏ hơn 0 và lớn hơn 10, không thực hiện cập nhật
-    if (newQuantity >= 1 && newQuantity <= 10) {
+    if (newQuantity >= 1 && newQuantity <= 9) {
       setQuantity(newQuantity);
     }
   };
@@ -79,10 +94,26 @@ function ProductInfo(props) {
     }
   };
 
+  const handleAddProductToCart = async (productId) => {
+    try {
+      if (cartData === null) {
+        ShoppingCartApi.createCart(productId);
+      } else {
+        const result = await ShoppingCartApi.getShoppingCartByDate();
+        ShoppingCartApi.addProductToCart(result.id, productId);
+      }
+      handleShowSuccessNotification('Đã thêm vào giỏ hàng!');
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     getData();
-    console.log('show');
-  }, []);
+    // getPurchase(false, product);
+    // setCheckToken(Storage.getToken());
+    // console.log('show');
+  }, [location.pathname]);
 
   const rowStyle = {
     display: 'grid',
@@ -102,10 +133,11 @@ function ProductInfo(props) {
               <Row>
                 <div className="product-infor-buy-button">
                   <Button
+                    className="product-infor-buy-btn black-btn"
                     type="button"
-                    color="primary"
                     size="lg"
                     onClick={() => {
+                      setCheckToken(Storage.getToken());
                       if (checkToken) {
                         //reset state
                         setOpenModal(true);
@@ -115,24 +147,24 @@ function ProductInfo(props) {
                       }
                     }}
                   >
-                    Mua ngay!
+                    MUA NGAY
                   </Button>
                 </div>
                 <div className="product-infor-buy-button">
                   <Button
                     type="button"
-                    color="warning"
+                    className="product-infor-addtocart-btn white-btn"
                     size="lg"
                     onClick={() => {
                       if (checkToken) {
                         //reset state
-                        handleShowSuccessNotification('Đã thêm sản phẩm vào giỏ hàng!');
+                        handleAddProductToCart(productId);
                       } else {
                         setOpenModal2(true);
                       }
                     }}
                   >
-                    Thêm vào giỏ hàng
+                    THÊM VÀO GIỎ HÀNG
                   </Button>
                 </div>
               </Row>
@@ -172,7 +204,7 @@ function ProductInfo(props) {
                 label_width={label_width}
                 input_width={input_width.price}
                 label="Price"
-                value={productInfo.price}
+                value={FormatPrice(productInfo.price)}
               />
 
               <TextInfor
@@ -217,7 +249,7 @@ function ProductInfo(props) {
         {/* footer */}
         <ModalFooter>
           <Button
-            color="primary"
+            className="black-btn"
             onClick={() => {
               navigate('/sign-in');
             }}
@@ -225,7 +257,7 @@ function ProductInfo(props) {
             Login
           </Button>
 
-          <Button color="warning" onClick={() => setOpenModal2(false)}>
+          <Button className="white-btn" onClick={() => setOpenModal2(false)}>
             Close
           </Button>
         </ModalFooter>
@@ -250,21 +282,33 @@ function ProductInfo(props) {
         {/* footer */}
         <ModalFooter>
           <Button
-            color="primary"
+            className="black-btn"
             onClick={() => {
               console.log(quantity);
+              getPurchase(true, itemPurchase, 0);
+              console.log(isPurchase);
+              console.log(itemPurchase);
+              navigate(`/purchase`);
             }}
           >
             Tới trang thanh toán
           </Button>
 
-          <Button color="warning" onClick={() => setOpenModal(false)}>
+          <Button className="white-btn" onClick={() => setOpenModal(false)}>
             Close
           </Button>
         </ModalFooter>
       </Modal>
     </Container>
   );
-}
+};
 
-export default ProductInfo;
+const mapGlobalStateToProps = (state) => {
+  return {
+    cartItems: selectCartItems(state),
+    isPurchase: selectIsPurchase(state),
+    purchaseItem: selectPurchaseItem(state),
+  };
+};
+
+export default connect(mapGlobalStateToProps, { getCartItemAction, getPurchaseAction })(ProductInfo);

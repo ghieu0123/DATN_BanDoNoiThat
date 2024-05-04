@@ -87,7 +87,7 @@ const ResetPassword = (props) => {
       >
         {({ isSubmitting }) => (
           <Card>
-            <CardBody>
+            <CardBody className="auth">
               <div className="m-sm-4">
                 <Form>
                   <FormGroup>
@@ -102,7 +102,7 @@ const ResetPassword = (props) => {
                   </FormGroup>
 
                   <div className="text-center mt-3">
-                    <Button type="submit" color="primary" size="lg" disabled={isSubmitting}>
+                    <Button type="submit" className='white-btn' size="lg" disabled={isSubmitting}>
                       Reset password
                     </Button>
                   </div>
@@ -127,10 +127,10 @@ const ResetPassword = (props) => {
 
         {/* footer */}
         <ModalFooter>
-          <Button color="primary" onClick={resendEmailToResetPassword} disabled={isDisableResendButton}>
+          <Button className='black-btn' onClick={resendEmailToResetPassword} disabled={isDisableResendButton}>
             Resend
           </Button>{' '}
-          <Button color="primary" onClick={redirectToLogin}>
+          <Button className='white-btn' onClick={redirectToLogin}>
             Login
           </Button>
         </ModalFooter>

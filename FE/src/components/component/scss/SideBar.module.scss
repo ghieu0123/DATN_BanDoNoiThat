@@ -6,6 +6,9 @@
   // padding-right: 15px;
   display: flex;
   justify-content: center;
+  position: sticky;
+  top: 0px;
+  z-index: 999;
 }
 .content {
   background-color: #f9f8f6;
@@ -114,6 +117,7 @@
   border: none;
   outline: none;
   font-size: 1.3rem;
+  color: #ccc;
   &:hover {
     background-color: rgba(22, 24, 35, 0.06);
     cursor: pointer;
@@ -128,5 +132,8 @@
     font-size: 15px;
     padding-bottom: 5px;
     padding-left: 5px;
+  }
+  a {
+    // background-color: #565656;
   }
 }

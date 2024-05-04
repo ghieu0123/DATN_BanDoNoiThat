@@ -7,11 +7,11 @@ function Admin({ children }) {
   return (
     <React.Fragment>
       <Header />
-      <div className="main">
+      <div style={{ display: 'flex' }}>
         <SideBarAdmin />
-        <div className="content">{children}</div>
-        <Footer />
+        <div style={{ height: '100%', width: '100%' }}>{children}</div>
       </div>
+      <Footer />
     </React.Fragment>
   );
 }

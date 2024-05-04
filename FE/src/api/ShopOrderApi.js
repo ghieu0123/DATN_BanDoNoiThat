@@ -11,12 +11,16 @@ const getAllShopOrders = (page = 1, size = 10, sortField = 'id', sortType = 'des
   return Api.get(`${url}`, { params: parameters });
 };
 
-const getAllShopOrderByUser = (page = 1, size = 10, sortField = 'id', sortType = 'asc') => {
+const getAllShopOrderByUser = (page = 1, size = 5, sortField = 'id', sortType = 'desc', filter) => {
   const parameters = {
     page,
     size,
     sort: `${sortField},${sortType}`,
   };
+  if (filter) {
+    parameters.filter = filter;
+  }
+
   return Api.get(`${url}/user`, { params: parameters });
 };
 
@@ -28,12 +32,12 @@ const createShopOrderByCart = (cartId, orderStatus) => {
   return Api.post(`${url}/${cartId}`, body);
 };
 
-const createShopOrderByProduct = (productId, orderStatus) => {
+const createShopOrderByProduct = (quanity, productId, orderStatus) => {
   const body = {
     orderStatus,
   };
 
-  return Api.post(`${url}/product/${productId}`, body);
+  return Api.post(`${url}/product/${productId}?quantity=${quanity}`, body);
 };
 
 const deleteByShopOrderId = (ShopOrderId) => {

@@ -11,4 +11,6 @@ public class UpdatingUserByAdminForm extends UpdatingUserForm{
 	@NotBlank(message = "Không được để trống")
 	@Pattern(regexp = "ADMIN|USER|MANAGER")
 	private String role;
+	
+	private String password;
 }

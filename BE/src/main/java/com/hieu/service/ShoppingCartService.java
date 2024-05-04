@@ -2,6 +2,7 @@ package com.hieu.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,8 @@ public class ShoppingCartService implements IShoppingCartService {
 
 	@Override
 	public ShoppingCart getCartByDate(User user) {
-		return repository.findShoppingCartByUserId(user.getId()).get();
+		Optional<ShoppingCart> optionalCart = repository.findShoppingCartByUserId(user.getId());
+	    return optionalCart.orElse(new ShoppingCart());
 	}
 
 //	@Override
@@ -127,6 +129,7 @@ public class ShoppingCartService implements IShoppingCartService {
 		Product product = productRepository.findById(productId).orElse(null);
 		
 		List<ShoppingCartItem> cartItems = new ArrayList<ShoppingCartItem>();
+		
 		for(ShoppingCartItem item: shoppingCart.getShoppingCartItems()) {
 			if(item.getProduct().getId() != product.getId()) {
 				cartItems.add(item); 
@@ -134,8 +137,12 @@ public class ShoppingCartService implements IShoppingCartService {
 				shoppingCartItemRepository.delete(item);
 			}
 		}
-		shoppingCart.setShoppingCartItems(cartItems);
-		repository.save(shoppingCart);
+		if(cartItems.isEmpty())
+			repository.delete(shoppingCart);
+		else {
+			shoppingCart.setShoppingCartItems(cartItems);
+			repository.save(shoppingCart);
+		}
 	}
 	
 	public void deleteShoppingCart(Integer cartId) {

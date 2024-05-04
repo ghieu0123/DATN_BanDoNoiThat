@@ -11,11 +11,11 @@ import { withRouter } from 'react-router-dom';
 const SignUp = (props) => {
   const [isOpenModal, setOpenModal] = useState(false);
 
-  const navigate = useNavigate();
-
   const [email, setEmail] = useState('');
 
   const [isDisableResendButton, setDisableResendButton] = useState(false);
+
+  const navigate = useNavigate();
 
   const resendEmailToActiveAccount = async () => {
     setDisableResendButton(true);
@@ -113,7 +113,7 @@ const SignUp = (props) => {
       >
         {({ isSubmitting }) => (
           <Card>
-            <CardBody>
+            <CardBody className="auth">
               <div className="m-sm-4">
                 <Form>
                   <FormGroup>
@@ -137,7 +137,7 @@ const SignUp = (props) => {
                       placeholder="Enter your last name"
                       component={ReactstrapInput}
                     />
-                    <ErrorMessage name="lastName" />
+                    {/* <ErrorMessage name="lastName" /> */}
                   </FormGroup>
 
                   <FormGroup>
@@ -149,7 +149,7 @@ const SignUp = (props) => {
                       placeholder="Enter your username"
                       component={ReactstrapInput}
                     />
-                    <ErrorMessage name="username" />
+                    {/* <ErrorMessage name="username" /> */}
                   </FormGroup>
 
                   <FormGroup>
@@ -161,7 +161,7 @@ const SignUp = (props) => {
                       placeholder="Enter your email"
                       component={ReactstrapInput}
                     />
-                    <ErrorMessage name="email" />
+                    {/* <ErrorMessage name="email" /> */}
                   </FormGroup>
 
                   <FormGroup>
@@ -173,7 +173,7 @@ const SignUp = (props) => {
                       placeholder="Enter your address"
                       component={ReactstrapInput}
                     />
-                    <ErrorMessage name="address" />
+                    {/* <ErrorMessage name="address" /> */}
                   </FormGroup>
 
                   <FormGroup>
@@ -185,7 +185,7 @@ const SignUp = (props) => {
                       placeholder="Enter your phone"
                       component={ReactstrapInput}
                     />
-                    <ErrorMessage name="phone" />
+                    {/* <ErrorMessage name="phone" /> */}
                   </FormGroup>
                   <FormGroup>
                     <FastField
@@ -196,7 +196,7 @@ const SignUp = (props) => {
                       placeholder="Enter password"
                       component={ReactstrapInput}
                     />
-                    <ErrorMessage name="password" />
+                    {/* <ErrorMessage name="password" /> */}
                   </FormGroup>
 
                   <FormGroup>
@@ -208,7 +208,7 @@ const SignUp = (props) => {
                       placeholder="Enter confirm password"
                       component={ReactstrapInput}
                     />
-                    <ErrorMessage name="confirmPassword" />
+                    {/* <ErrorMessage name="confirmPassword" /> */}
                   </FormGroup>
 
                   {/* Nút Sign in */}
@@ -222,12 +222,13 @@ const SignUp = (props) => {
 
                   <div className="text-center mt-3">
                     <Button
+                      className='white-btn'
                       type="submit"
                       color="primary"
                       size="lg"
                       // disabled={isSubmitting}
                     >
-                      Sign up
+                      Sign Up
                     </Button>
                   </div>
                 </Form>
@@ -251,10 +252,10 @@ const SignUp = (props) => {
 
         {/* footer */}
         <ModalFooter>
-          <Button color="primary" onClick={resendEmailToActiveAccount} disabled={isDisableResendButton}>
+          <Button className='black-btn' onClick={resendEmailToActiveAccount} disabled={isDisableResendButton}>
             Resend
           </Button>{' '}
-          <Button color="primary" onClick={redirectToLogin}>
+          <Button className='white-btn' onClick={redirectToLogin}>
             Login
           </Button>
         </ModalFooter>

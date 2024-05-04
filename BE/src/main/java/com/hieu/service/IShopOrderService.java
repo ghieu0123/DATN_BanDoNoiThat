@@ -14,7 +14,7 @@ import com.hieu.form.shoporder.UpdatingShopOrderForm;
 public interface IShopOrderService {
 	public Page<ShopOrder> getAllShopOrders(Pageable pageable);
 	
-	public Page<ShopOrder> getAllShopOrdersByUser(User user, Pageable pageable);
+	public Page<ShopOrder> getAllShopOrdersByUser(User user, String filter, Pageable pageable);
 
 	public ShopOrder getShopOrderByID(Integer id);
 

@@ -6,11 +6,12 @@ import { Link } from 'react-router-dom';
 
 const cx = classNames.bind(styles);
 
-function Button({ to, href, primary, children, onClick, ...passProps }) {
+function Button({ to, styles, href, primary, children, onClick, ...passProps }) {
   let Comp = 'button';
 
   const props = {
     onClick,
+    styles,
     ...passProps,
   };
 

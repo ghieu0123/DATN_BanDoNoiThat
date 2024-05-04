@@ -8,6 +8,7 @@ import Storage from '../../storage/Storage';
 import { TextInfor } from '../../custom_/Text';
 import { Card, Modal, ModalBody, ModalFooter, ModalHeader, Button, Col, Container, Row } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 const handleShowSuccessNotification = (message) => {
   toast.success(message, {
@@ -34,10 +35,13 @@ function Home() {
           <Link to="/"> Home</Link>
         </li>
         <li>
-          <Link to="/ProductInfo">View product detail</Link>
+          <Link to="/Products/1">View product detail</Link>
         </li>
         <li>
           <Link to="/Sign-in">Sign In</Link>
+        </li>
+        <li>
+          <Link to="/products">Product Home</Link>
         </li>
       </ul>
     </div>

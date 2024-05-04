@@ -2,7 +2,7 @@ import Api from './Api';
 
 const url = '/products';
 
-const getAllProduct = (page = 1, size = 10, sortField = 'id', sortType = 'desc', search = '', category, type) => {
+const getAllProduct = (page = 1, size = 8, sortField = 'id', sortType = 'desc', search = '', category, type) => {
   const parameters = {
     page,
     size,
@@ -19,8 +19,8 @@ const getAllProduct = (page = 1, size = 10, sortField = 'id', sortType = 'desc',
     parameters.category = category;
   }
 
-  // filter
-  if (type !== null && type !== undefined) {
+  // category
+  if (type) {
     parameters.type = type;
   }
 
@@ -58,9 +58,13 @@ const updateProduct = (id, values) => {
     type: values.type,
     category: values.category,
   };
-  return Api.put(`${url}/admin/${id}`, body);
+  return Api.put(`${url}/${id}`, body);
+};
+
+const deleteProduct = (ids) => {
+  return Api.delete(`${url}/${ids.toString()}`);
 };
 
 // export
-const api = { getAllProduct, createProduct, updateProduct, getProductById };
+const api = { getAllProduct, createProduct, updateProduct, getProductById, deleteProduct };
 export default api;

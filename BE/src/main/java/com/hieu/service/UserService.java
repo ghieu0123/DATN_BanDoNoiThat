@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.hieu.entity.RegistrationUserToken;
 import com.hieu.entity.ResetPasswordToken;
 import com.hieu.entity.Role;
+import com.hieu.entity.ShopOrderStatus;
 import com.hieu.entity.User;
 import com.hieu.entity.UserStatus;
 import com.hieu.event.OnResetPasswordViaEmailEvent;
@@ -30,7 +31,7 @@ import com.hieu.repository.ResetPasswordTokenRepository;
 import com.hieu.specification.user.UserSpecification;
 
 @Service
-public class UserService implements IUserService{
+public class UserService implements IUserService {
 	@Autowired
 	private IUserRepository repository;
 
@@ -42,24 +43,30 @@ public class UserService implements IUserService{
 
 	@Autowired
 	private ApplicationEventPublisher eventPublisher;
-	
+
 	@Autowired
 	private ResetPasswordTokenRepository resetPasswordTokenRepository;
-	
+
 	@Autowired
 	private RegistrationUserTokenRepository registrationUserTokenRepository;
 
 	@Override
-	public Page<User> getAllUsers(Pageable pageable, String search, UserFilterForm filter) {
-
-		Specification<User> where = UserSpecification.buildWhere(search, filter);
-		
-		return repository.findAll(where ,pageable);
+	public Page<User> getAllUsers(Pageable pageable, String search, String role) {
+		if (role != null) {
+			Role newRole = Role.valueOf(role.toUpperCase());
+			UserFilterForm filter = new UserFilterForm(newRole);
+			Specification<User> where = UserSpecification.buildWhere(search, filter);
+			return repository.findAll(where, pageable);
+		} else {
+			UserFilterForm filter = new UserFilterForm();
+			Specification<User> where = UserSpecification.buildWhere(search, filter);
+			return repository.findAll(where, pageable);
+		}
 	}
 
 	@Override
 	public User getUserByID(Integer id) {
-		return repository.getById(id);
+		return repository.findById(id).get();
 	}
 
 	@Override
@@ -86,30 +93,32 @@ public class UserService implements IUserService{
 	@Transactional
 	public void updateUser(Integer id, UpdatingUserForm form) {
 		User userForm = modelMapper.map(form, User.class);
-		
+
 		User userEnity = repository.findById(id).get();
-		
+
 		userEnity.setAddress(userForm.getAddress());
 		userEnity.setPhone(userForm.getPhone());
 		userEnity.setFirstName(userForm.getFirstName());
 		userEnity.setLastName(userForm.getLastName());
 
-	    repository.save(userEnity);
+		repository.save(userEnity);
 	}
-	
+
 	@Override
 	public void updateUserByAdmin(Integer id, UpdatingUserByAdminForm form) {
 		User userForm = modelMapper.map(form, User.class);
-		
+
 		User userEnity = repository.findById(id).get();
-		
+
 		userEnity.setAddress(userForm.getAddress());
 		userEnity.setPhone(userForm.getPhone());
 		userEnity.setFirstName(userForm.getFirstName());
 		userEnity.setLastName(userForm.getLastName());
 		userEnity.setRole(userForm.getRole());
+		if (form.getPassword().equals("")==false && form.getPassword().isEmpty() == false && form.getPassword().isBlank() == false)
+			userEnity.setPassword(passwordEncoder.encode(userForm.getPassword()));
 
-	    repository.save(userEnity);
+		repository.save(userEnity);
 	}
 
 	@Override
@@ -121,22 +130,23 @@ public class UserService implements IUserService{
 	public User findUserByEmail(String email) {
 		return repository.findByEmail(email);
 	}
-	
+
 	@Override
 	public boolean existsUserByUsername(String userName) {
 		return repository.existsByUsername(userName);
 	}
-	
+
 	@Transactional
-	public void deleteUsers(List<Integer> ids) {
+	public void deleteUsers(Integer idCheck, List<Integer> ids) {
+		ids.remove(idCheck);
 		repository.deleteByIdIn(ids);
 	}
-	
+
 	@Override
 	public void Register(User user) {
 		// encode password
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		
+
 		user.setRole(Role.USER);
 
 		// create user
@@ -148,21 +158,21 @@ public class UserService implements IUserService{
 		// send email to confirm
 		sendConfirmUserRegistrationViaEmail(user.getEmail());
 	}
-	
+
 	@Override
 	public void createUserByAdmin(CreatingUserByAdminForm form) {
-		
+
 		User user = modelMapper.map(form, User.class);
-		
+
 		// encode password
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		
+
 		user.setStatus(UserStatus.ACTIVE);
-		
+
 		// create user
 		repository.save(user);
 	}
-	
+
 	@Override
 	public void sendResetPasswordViaEmail(String email) {
 		eventPublisher.publishEvent(new OnResetPasswordViaEmailEvent(email));
@@ -181,9 +191,9 @@ public class UserService implements IUserService{
 
 		// send email
 		sendResetPasswordViaEmail(email);
-		
+
 	}
-	
+
 	private void createNewResetPasswordToken(User user) {
 
 		// create new token for Reseting password
@@ -195,7 +205,7 @@ public class UserService implements IUserService{
 
 	@Override
 	public void resetPassword(String token, String newPassword) {
-		
+
 		// get token
 		ResetPasswordToken resetPasswordToken = resetPasswordTokenRepository.findByToken(token);
 
@@ -207,7 +217,7 @@ public class UserService implements IUserService{
 		// remove Reset Password
 		resetPasswordTokenRepository.deleteById(resetPasswordToken.getId());
 	}
-	
+
 	@Override
 	public void createNewRegistrationUserToken(User user) {
 

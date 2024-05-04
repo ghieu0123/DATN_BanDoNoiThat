@@ -14,7 +14,7 @@ import com.hieu.form.user.UpdatingUserByAdminForm;
 
 public interface IUserService{
 
-	public Page<User> getAllUsers(Pageable pageable, String search, UserFilterForm filter);
+	public Page<User> getAllUsers(Pageable pageable, String search, String role);
 
 	public User getUserByID(Integer id);
 
@@ -36,7 +36,7 @@ public interface IUserService{
 
 	public boolean existsUserByUsername(String userName);
 
-	public void deleteUsers(List<Integer> ids);
+	public void deleteUsers(Integer idCheck, List<Integer> ids);
 
 	void Register(User user);
 

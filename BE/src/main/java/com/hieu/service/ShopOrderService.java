@@ -7,6 +7,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +15,7 @@ import com.hieu.entity.Payment;
 import com.hieu.entity.Product;
 import com.hieu.entity.ShopOrder;
 import com.hieu.entity.ShopOrderItem;
+import com.hieu.entity.ShopOrderStatus;
 import com.hieu.entity.ShoppingCart;
 import com.hieu.entity.ShoppingCartItem;
 import com.hieu.entity.User;
@@ -24,6 +26,7 @@ import com.hieu.repository.IProductRepository;
 import com.hieu.repository.IShopOrderItemRepository;
 import com.hieu.repository.IShopOrderRepository;
 import com.hieu.repository.IShoppingCartRepository;
+import com.hieu.specification.shoporder.ShopOrderSpecification;
 
 @Service
 public class ShopOrderService implements IShopOrderService {
@@ -51,7 +54,10 @@ public class ShopOrderService implements IShopOrderService {
 		return repository.findAll(pageable);
 	}
 	
-	public Page<ShopOrder> getAllShopOrdersByUser(User user, Pageable pageable){
+	public Page<ShopOrder> getAllShopOrdersByUser(User user, String filter, Pageable pageable) {
+		if(filter!=null) {
+		ShopOrderStatus orderStatus = ShopOrderStatus.valueOf(filter.toUpperCase());
+		return repository.findByUserAndOrderStatus(user, orderStatus, pageable);}
 		return repository.findByUser(user, pageable);
 	}
 
@@ -119,7 +125,7 @@ public class ShopOrderService implements IShopOrderService {
 	    
 	    Product productEnitity = productRepository.findById(prouductId).get();
 	    
-	    orderEntity.setTotalPrice(productEnitity.getPrice());
+	    orderEntity.setTotalPrice(productEnitity.getPrice()*quantity);
 	    orderEntity.setUser(user);
 	    orderEntity.setAddressShipping(user.getAddress());
 	    
