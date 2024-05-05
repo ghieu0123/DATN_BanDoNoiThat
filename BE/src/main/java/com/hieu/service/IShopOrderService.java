@@ -12,7 +12,7 @@ import com.hieu.form.shoporder.UpdatingShopOrderForm;
   
 
 public interface IShopOrderService {
-	public Page<ShopOrder> getAllShopOrders(Pageable pageable);
+	public Page<ShopOrder> getAllShopOrders(String filter, Pageable pageable);
 	
 	public Page<ShopOrder> getAllShopOrdersByUser(User user, String filter, Pageable pageable);
 
@@ -29,4 +29,6 @@ public interface IShopOrderService {
 	public void deleteShopOrder(List<Integer> ids);
 	
 	public void deleteShopOrder(Integer id);
+	
+	public Long getTotalPrice();
 }

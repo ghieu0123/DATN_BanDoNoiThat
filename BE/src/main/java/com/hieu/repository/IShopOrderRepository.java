@@ -1,5 +1,7 @@
 package com.hieu.repository;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,4 +15,8 @@ public interface IShopOrderRepository extends JpaRepository<ShopOrder, Integer>,
 	public Page<ShopOrder> findByUserAndOrderStatus(User user, ShopOrderStatus orderStatus, Pageable pageable);
 	
 	public Page<ShopOrder> findByUser(User user, Pageable pageable);
+	
+	public void deleteByIdIn(List<Integer> ids);
+	
+	public List<ShopOrder> findAllByOrderStatus(ShopOrderStatus orderStatus);
 }

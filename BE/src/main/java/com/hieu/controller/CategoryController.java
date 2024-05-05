@@ -69,7 +69,7 @@ public class CategoryController {
 	}
 	
 	@DeleteMapping(value = "/{ids}")
-	public ResponseEntity<?> updateCategory(@PathVariable(value = "ids") List<Integer> ids){
+	public ResponseEntity<?> deleteCategory(@PathVariable(value = "ids") List<Integer> ids){
 		service.deleteCategory(ids);
 		return new ResponseEntity<>("Delete successfully!", HttpStatus.OK);
 	}

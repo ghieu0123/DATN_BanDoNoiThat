@@ -68,7 +68,7 @@ public class TypeController {
 	}
 	
 	@DeleteMapping(value = "/{ids}")
-	public ResponseEntity<?> updateType(@PathVariable(value = "ids") List<Integer> ids){
+	public ResponseEntity<?> deleteType(@PathVariable(value = "ids") List<Integer> ids){
 		service.deleteType(ids);
 		return new ResponseEntity<>("Delete successfully!", HttpStatus.OK);
 	}

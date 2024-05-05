@@ -36,19 +36,21 @@ import com.hieu.service.IUserService;
 @CrossOrigin("*")
 @RequestMapping(value = "api/v1/shoporders")
 public class ShopOrderController {
-	
+
 	@Autowired
 	private ModelMapper modelMapper;
-	
+
 	@Autowired
 	private IShopOrderService service;
-	
+
 	@Autowired
 	private IUserService userService;
-	
+
 	@GetMapping()
-	public ResponseEntity<?> getAllShopOrder( @PageableDefault(sort = { "id" }, direction = Sort.Direction.ASC) Pageable pageable) {
-		Page<ShopOrder> entityPages = service.getAllShopOrders(pageable);
+	public ResponseEntity<?> getAllShopOrder(
+			@PageableDefault(sort = { "id" }, direction = Sort.Direction.ASC) Pageable pageable,
+			@RequestParam(value = "filter", required = false) String filter) {
+		Page<ShopOrder> entityPages = service.getAllShopOrders(filter, pageable);
 
 		List<ShopOrderDTO> dtos = modelMapper.map(entityPages.getContent(), new TypeToken<List<ShopOrderDTO>>() {
 		}.getType());
@@ -57,12 +59,11 @@ public class ShopOrderController {
 
 		return new ResponseEntity<>(dtoPage, HttpStatus.OK);
 	}
-	
+
 	@GetMapping(value = "/user")
 	public ResponseEntity<?> getAllShopOrderByUser(Authentication authentication,
 			@PageableDefault(sort = { "id" }, direction = Sort.Direction.ASC) Pageable pageable,
-			@RequestParam(value = "filter", required = false) String filter
-			) {
+			@RequestParam(value = "filter", required = false) String filter) {
 		String username = authentication.getName();
 
 		User myUser = userService.findUserByUsername(username);
@@ -75,28 +76,34 @@ public class ShopOrderController {
 
 		return new ResponseEntity<>(dtoPage, HttpStatus.OK);
 	}
-	
+
 	@PostMapping(value = "/{cartid}")
-	public ResponseEntity<?> createShopOrderByCart (@PathVariable(value = "cartid") Integer cartId,
-													@RequestBody CreatingShopOrderForm form){
+	public ResponseEntity<?> createShopOrderByCart(@PathVariable(value = "cartid") Integer cartId,
+			@RequestBody CreatingShopOrderForm form) {
 		service.createShopOrderByCart(cartId, form);
 		return new ResponseEntity<>("Create successfully! " + cartId, HttpStatus.OK);
 	}
-	
+
 	@PostMapping(value = "/product/{id}")
-	public ResponseEntity<?> createShopOrderByProduct (Authentication authentication, @PathVariable(value = "id") Integer productId,
-													   @RequestBody CreatingShopOrderForm form,
-													   @RequestParam(value = "quantity") int quantity){
+	public ResponseEntity<?> createShopOrderByProduct(Authentication authentication,
+			@PathVariable(value = "id") Integer productId, @RequestBody CreatingShopOrderForm form,
+			@RequestParam(value = "quantity") int quantity) {
 		String username = authentication.getName();
 
 		User myUser = userService.findUserByUsername(username);
 		service.createShopOrderByProduct(myUser, productId, quantity, form);
 		return new ResponseEntity<>("Create successfully! ", HttpStatus.OK);
 	}
-	
-	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<?> deleteShopOrderById (@PathVariable(value = "id") Integer shopOrderId){
-		service.deleteShopOrder(shopOrderId);
+
+	@DeleteMapping(value = "/{ids}")
+	public ResponseEntity<?> deleteShopOrderById(@PathVariable(value = "ids") List<Integer> ids) {
+		service.deleteShopOrder(ids);
 		return new ResponseEntity<>("Delete successfully! ", HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/totalprice")
+	public ResponseEntity<?> getTotalPrice() {
+		Long total = service.getTotalPrice();
+		return new ResponseEntity<>(total, HttpStatus.OK);
 	}
 }
