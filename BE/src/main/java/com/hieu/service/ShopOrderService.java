@@ -82,7 +82,7 @@ public class ShopOrderService implements IShopOrderService {
 
 	@Override
 	@Transactional
-	public void createShopOrderByCart(Integer shoppingCartId, CreatingShopOrderForm form) {
+	public Integer createShopOrderByCart(Integer shoppingCartId, CreatingShopOrderForm form) {
 		ShopOrder orderEntity = new ShopOrder();
 		ShopOrder orderForm = modelMapper.map(form, ShopOrder.class);
 		ShoppingCart myCart = shoppingCartRepository.findById(shoppingCartId).get();
@@ -123,10 +123,11 @@ public class ShopOrderService implements IShopOrderService {
 		}
 		// Lưu lại Enity sau khi đã Set các thuộc tính
 		repository.save(orderEntity);
+		return orderEntity.getId();
 	}
 
 	@Override
-	public void createShopOrderByProduct(User user, Integer prouductId, int quantity, CreatingShopOrderForm form) {
+	public Integer createShopOrderByProduct(User user, Integer prouductId, int quantity, CreatingShopOrderForm form) {
 		ShopOrder orderEntity = new ShopOrder();
 		ShopOrder orderForm = modelMapper.map(form, ShopOrder.class);
 		orderEntity.setOrderStatus(orderForm.getOrderStatus());
@@ -155,6 +156,7 @@ public class ShopOrderService implements IShopOrderService {
 		}
 		// Lưu lại Enity sau khi đã Set các thuộc tính
 		repository.save(orderEntity);
+		return orderEntity.getId();
 	}
 
 	@Override

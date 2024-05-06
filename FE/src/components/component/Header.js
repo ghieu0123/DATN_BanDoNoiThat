@@ -75,7 +75,7 @@ function Header(props) {
                 <button
                   className={cx('buttons', 'admin-btn')}
                   onClick={() => {
-                    navigate('/admin/product');
+                    navigate('/admin/user');
                   }}
                 >
                   Go to Administration

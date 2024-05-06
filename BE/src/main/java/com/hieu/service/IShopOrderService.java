@@ -20,9 +20,9 @@ public interface IShopOrderService {
 
 	public boolean isShopOrderExistsByID(Integer id);
 
-	public void createShopOrderByCart(Integer shoppingCartId, CreatingShopOrderForm form);
+	public Integer createShopOrderByCart(Integer shoppingCartId, CreatingShopOrderForm form);
 	
-	public void createShopOrderByProduct(User user, Integer prouductId, int quantity, CreatingShopOrderForm form);
+	public Integer createShopOrderByProduct(User user, Integer prouductId, int quantity, CreatingShopOrderForm form);
 
 	public void updateShopOrder(User user, Integer id, UpdatingShopOrderForm form);
 

@@ -1,5 +1,6 @@
 import { useState, useEffect, Fragment } from 'react';
 import ShopOrderApi from '../../api/ShopOrderApi';
+import VNPayApi from '../../api/VNPayApi';
 import { getOrderAction } from '../../redux/actions/OrderAction';
 import { connect } from 'react-redux';
 import { selectOrders } from '../../redux/selectors/OrderSelector';
@@ -9,9 +10,22 @@ import NotifiBox3 from '../../components/component/box/NotifiBox3';
 import { ToastContainer, toast } from 'react-toastify';
 import PaymentApi from '../../api/PaymentApi';
 import { useNavigate } from 'react-router-dom';
+import image from '../../assets/logo/vnpay-logo.png';
 const handleShowSuccessotification = () => {
   toast.success('Thanh toán thành công!', {
     toastId: 'pay-success', // Đặt một toastId cụ thể
+    position: 'top-right',
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+  });
+};
+const handleShowDeleteNotification = () => {
+  toast.success('Hủy đơn hàng thành công!', {
+    toastId: 'delete-order', // Đặt một toastId cụ thể
     position: 'top-right',
     autoClose: 3000,
     hideProgressBar: false,
@@ -30,6 +44,7 @@ function Order(props) {
   const [isChoose, setChoese] = useState('');
   const [isShow1, setShow1] = useState(false);
   const [isShow2, setShow2] = useState(false);
+  const [isShow3, setShow3] = useState(false);
   const [index, setIndex] = useState(1);
   const orderList = props.orders;
 
@@ -55,6 +70,30 @@ function Order(props) {
       setShow1(false);
       setShow2(false);
       handleShowSuccessotification();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handlePurchaseByVNPay = async (totalPrice, id) => {
+    try {
+      const result = await VNPayApi.submitOrder(totalPrice, 'Thong tin don hang id' + id);
+      console.log(result);
+      const paymentUrl = result.paymentUrl;
+      console.log(result.data);
+      // Chuyển hướng người dùng đến trang thanh toán của VNPay
+      window.location.href = paymentUrl;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleDeleteOrder = async (id) => {
+    try {
+      await ShopOrderApi.deleteByIds(id);
+      getOrderData(page, orderStatus);
+      handleShowDeleteNotification();
+      setShow3(false);
     } catch (error) {
       console.log(error);
     }
@@ -108,6 +147,19 @@ function Order(props) {
               setPage(1);
             }}
           >
+            Thanh toán khi nhận hàng
+          </button>
+        </div>
+        <div className="order-select-container" style={isChoose === 'PROCESSING' ? style : {}}>
+          <button
+            className="order-select-btn"
+            onClick={() => {
+              setChoese('PROCESSING');
+              getOrderData(1, 'PROCESSING');
+              setOrderStatus('PROCESSING');
+              setPage(1);
+            }}
+          >
             Chưa thanh toán
           </button>
         </div>
@@ -123,7 +175,12 @@ function Order(props) {
                 <p className="order-details">Tổng giá trị: {FormatPrice(order.totalPrice)}</p>
                 <p className="order-details">Địa chỉ giao hàng: {order.addressShipping}</p>
                 <p className="order-details">
-                  Trạng thái: {order.orderStatus === 'PAY' ? 'Đã thanh toán' : 'Chưa thanh toán'}
+                  Trạng thái:{' '}
+                  {order.orderStatus === 'PAY'
+                    ? 'Đã thanh toán'
+                    : order.orderStatus == 'NOT_PAY'
+                    ? 'Thanh toán khi nhận hàng'
+                    : 'Đơn hàng chưa thanh toán'}
                 </p>
                 <div className="order-moreinfo">
                   {order.orderStatus === 'NOT_PAY' ? (
@@ -134,8 +191,35 @@ function Order(props) {
                         setIndex(index);
                       }}
                     >
-                      Thanh toán và nhận hàng
+                      Nhận hàng và thanh toán
                     </button>
+                  ) : (
+                    <></>
+                  )}
+                  {order.orderStatus === 'PROCESSING' ? (
+                    <>
+                      <button
+                        className="white-btn order-moreinfo-btn"
+                        onClick={() => {
+                          setShow3(true);
+                          setIndex(index);
+                        }}
+                      >
+                        Hủy đơn hàng
+                      </button>
+                      <button
+                        className="white-btn order-moreinfo-btn"
+                        onClick={() => {
+                          setIndex(index);
+                          setShow1(true);
+                        }}
+                      >
+                        <>
+                          Thanh toán qua
+                          <img src={image} alt="vnpay" style={{ width: '50px', marginLeft: '5px' }} />
+                        </>
+                      </button>
+                    </>
                   ) : (
                     <></>
                   )}
@@ -161,11 +245,30 @@ function Order(props) {
           <Fragment />
         ) : (
           <NotifiBox
-            content="Bạn xác nhận thanh toán cho đơn hàng này?"
+            content={
+              orderList[index].orderStatus === 'PROCESSING'
+                ? 'Xác nhận để tiến hành tới thanh toán đơn hàng'
+                : 'Xác nhận đã nhận được hàng và thanh toán cho người giao đơn hàng này?'
+            }
             btnname1="Thanh toán"
             btnname2="Close"
-            action1={() => handlePay(orderList[index].id)}
+            action1={() =>
+              orderList[index].orderStatus === 'PROCESSING'
+                ? handlePurchaseByVNPay(orderList[index].totalPrice / 1000, orderList[index].id)
+                : handlePay(orderList[index].id)
+            }
             action2={() => setShow1(false)}
+          />
+        )}
+        {isShow3 === false ? (
+          <Fragment />
+        ) : (
+          <NotifiBox
+            content={'Bạn có chắc chắn muốn hủy đơn hàng này ?'}
+            btnname1="Xác nhận"
+            btnname2="Close"
+            action1={() => handleDeleteOrder(orderList[index].id)}
+            action2={() => setShow3(false)}
           />
         )}
         {isShow2 === false ? (
@@ -205,12 +308,23 @@ function Order(props) {
                 ))}
               </div>
             }
-            isbtn1={orderList[index].orderStatus === 'NOT_PAY' ? true : false}
+            isbtn1={orderList[index].orderStatus === 'PAY' ? false : true}
             isbtn2={true}
-            btnname1="Thanh toán"
+            btnname1={
+              orderList[index].orderStatus === 'NOT_PAY' ? (
+                'Xác nhận đã thanh toán nhận hàng'
+              ) : (
+                <>
+                  Thanh toán qua
+                  <img src={image} alt="vnpay" style={{ width: '50px', marginLeft: '5px' }} />
+                </>
+              )
+            }
             btnname2="Close"
             action1={() => {
-              handlePay(orderList[index].id);
+              orderList[index].orderStatus === 'NOT_PAY'
+                ? handlePay(orderList[index].id)
+                : handlePurchaseByVNPay(orderList[index].totalPrice / 1000, orderList[index].id);
             }}
             action2={() => setShow2(false)}
           />

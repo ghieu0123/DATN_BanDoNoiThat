@@ -233,14 +233,16 @@ function UserManager(props) {
                     </td>
                     <td>{product.collection}</td>
                     <td>{product.size}</td>
-                    <td>{product.type.typeName}</td>
+                    <td>{product.type && product.type.typeName ? product.type.typeName : 'null'}</td>
                     <td>{product.description.substring(0, 30)}...</td>
                     <td>{product.material}</td>
                     <td>{FormatPrice(product.price)}</td>
                     <td>
                       <img src={product.image} alt="image" />
                     </td>
-                    <td>{product.category.categoryName}</td>
+                    <td>
+                      {product.category && product.category.categoryName ? product.category.categoryName : 'null'}
+                    </td>
                     <td>
                       <button
                         onClick={() => {
@@ -329,8 +331,18 @@ function UserManager(props) {
                 material: indexCheck === undefined ? '' : productData[indexCheck].material,
                 price: indexCheck === undefined ? '' : productData[indexCheck].price,
                 image: indexCheck === undefined ? '' : productData[indexCheck].image,
-                type: indexCheck === undefined ? '' : productData[indexCheck].type.typeName,
-                category: indexCheck === undefined ? '' : productData[indexCheck].category.categoryName,
+                type:
+                  indexCheck === undefined
+                    ? ''
+                    : productData[indexCheck].type && productData[indexCheck].type.typeName
+                    ? productData[indexCheck].type.typeName
+                    : '',
+                category:
+                  indexCheck === undefined
+                    ? ''
+                    : productData[indexCheck].category && productData[indexCheck].category.categoryName
+                    ? productData[indexCheck].category.categoryName
+                    : '',
               }}
               validationSchema={Yup.object().shape({
                 name: Yup.string().max(50, 'Must be less than 50 characters').required('Required'),

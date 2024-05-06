@@ -2,12 +2,15 @@ import Api from './Api';
 
 const url = '/shoporders';
 
-const getAllShopOrders = (page = 1, size = 10, sortField = 'id', sortType = 'desc') => {
+const getAllShopOrders = (page = 1, size = 10, sortField = 'id', sortType = 'desc', filter) => {
   const parameters = {
     page,
     size,
     sort: `${sortField},${sortType}`,
   };
+  if (filter) {
+    parameters.filter = filter;
+  }
   return Api.get(`${url}`, { params: parameters });
 };
 
@@ -40,8 +43,12 @@ const createShopOrderByProduct = (quanity, productId, orderStatus) => {
   return Api.post(`${url}/product/${productId}?quantity=${quanity}`, body);
 };
 
-const deleteByShopOrderId = (ShopOrderId) => {
-  return Api.delete(`${url}/${ShopOrderId}`);
+const getTotalPrice = () => {
+  return Api.get(`${url}/totalprice`);
+};
+
+const deleteByIds = (ids) => {
+  return Api.delete(`${url}/${ids.toString()}`);
 };
 
 const api = {
@@ -49,6 +56,7 @@ const api = {
   getAllShopOrderByUser,
   createShopOrderByCart,
   createShopOrderByProduct,
-  deleteByShopOrderId,
+  deleteByIds,
+  getTotalPrice,
 };
 export default api;

@@ -25,6 +25,10 @@ import Order from '../pages/Order/Order';
 //admin
 import ProductManager from '../pages/admin/ProductManager';
 import UserManager from '../pages/admin/UserManager';
+import OrderManager from '../pages/admin/OrderManager';
+import TypeManager from '../pages/admin/TypeManager';
+import CategoryManager from '../pages/admin/CategoryManager';
+import PurchaseVNPay from '../pages/Order/PurchaseVNPay';
 
 //public router
 const publicRouter = [
@@ -42,10 +46,14 @@ const publicRouter = [
   { path: RoutesConfig.products, component: ProductHome },
   { path: RoutesConfig.productInfo, component: ProductInfo },
   { path: RoutesConfig.purchase, component: withAuth(Purchase), layout: ContentOnly },
+  { path: '/products/order/purchaseInfo', component: withAuth(PurchaseVNPay), layout: ContentOnly },
   { path: '/products/order', component: withAuth(Order), layout: HeaderOnly },
   //admin
   { path: '/admin/product', component: withAuth(withAdmin(ProductManager)), layout: Admin },
   { path: '/admin/user', component: withAuth(withAdmin(UserManager)), layout: Admin },
+  { path: '/admin/order', component: withAuth(withAdmin(OrderManager)), layout: Admin },
+  { path: '/admin/type', component: withAuth(withAdmin(TypeManager)), layout: Admin },
+  { path: '/admin/category', component: withAuth(withAdmin(CategoryManager)), layout: Admin },
 ];
 
 const privateRouter = [];

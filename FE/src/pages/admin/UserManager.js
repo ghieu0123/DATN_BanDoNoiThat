@@ -74,7 +74,7 @@ function UserManager(props) {
     try {
       const result = await UserApi.deleteByIds(ids);
       getAllUser(page, selectSearchValue, selectRoleValue);
-      handleShowSuccessNotification('Xóa sản phẩm thành công');
+      handleShowSuccessNotification('Xóa người dùng thành công');
     } catch (error) {
       console.log(error);
     }
@@ -385,16 +385,6 @@ function UserManager(props) {
                           ) : (
                             <></>
                           )}
-                          <FormGroup>
-                            <FastField
-                              label="New password"
-                              type="text"
-                              bsSize="lg"
-                              name="password"
-                              placeholder="Enter new password"
-                              component={ReactstrapInput}
-                            />
-                          </FormGroup>
 
                           <FormGroup>
                             <FastField
@@ -417,7 +407,16 @@ function UserManager(props) {
                               component={ReactstrapInput}
                             />
                           </FormGroup>
-
+                          <FormGroup>
+                            <FastField
+                              label="New password"
+                              type="text"
+                              bsSize="lg"
+                              name="password"
+                              placeholder="Enter new password"
+                              component={ReactstrapInput}
+                            />
+                          </FormGroup>
                           <FormGroup>
                             <Label for="role">Role </Label>
                             <Field as="select" id="role" name="role">

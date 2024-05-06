@@ -57,7 +57,7 @@ CREATE TABLE `ShopOrder`(
 	`orderDate`			DATE NOT NULL,
     `totalPrice`		INT NOT NULL,
     `addressShipping`	VARCHAR(100) NOT NULL,
-    `orderStatus`		ENUM('NOT_PAY','PAY') DEFAULT 'NOT_PAY',
+    `orderStatus`		ENUM('NOT_PAY', 'PROCESSING','PAY') DEFAULT 'NOT_PAY',
     `userId`			INT,
     FOREIGN KEY (userId) REFERENCES User(id) ON DELETE SET NULL
 );
@@ -121,6 +121,8 @@ CREATE TABLE IF NOT EXISTS `Reset_Password_Token` (
 	`user_id` 		SMALLINT UNSIGNED NOT NULL,
 	`expiryDate` 	DATETIME NOT NULL
 );
+
+
 
 INSERT INTO `User` (`username`, `email`, `password`, `address`, `phone`, `firstName`, `lastName`, `role`, `status`)
 VALUES 

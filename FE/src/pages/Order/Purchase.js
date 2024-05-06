@@ -6,8 +6,10 @@ import { useEffect, useState, Fragment } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import ShoppingCartApi from '../../api/ShoppingCartApi';
 import UserApi from '../../api/UserApi';
+import VNPayApi from '../../api/VNPayApi';
 import ShopOrderApi from '../../api/ShopOrderApi';
 import NotifiBox2 from '../../components/component/box/NotifiBox2';
+import image from '../../assets/logo/vnpay-logo.png';
 
 function Purchase(props) {
   const isPurchase = props.isPurchase;
@@ -20,6 +22,7 @@ function Purchase(props) {
   const [userInfo, setUserInfo] = useState({});
   const [paymentMethod, setPaymentMethod] = useState('PAY');
   const [isShowBox, setShowBox] = useState(false);
+  const [idOrder, setIdOrder] = useState();
 
   const navigate = useNavigate();
 
@@ -59,20 +62,62 @@ function Purchase(props) {
     return total + item.product.price * (item.quantity + quantity[index]);
   }, 0);
 
-  const handleOrder = async () => {
+  const handleOrder = async (totalPrice, orderInfo) => {
     try {
       if (isProduct === 0) {
-        await ShopOrderApi.createShopOrderByProduct(
-          quantity[0] + purchaseItem[0].quantity,
-          purchaseItem[0].product.id,
-          paymentMethod,
-        );
+        if (paymentMethod === 'NOT_PAY') {
+          await ShopOrderApi.createShopOrderByProduct(
+            quantity[0] + purchaseItem[0].quantity,
+            purchaseItem[0].product.id,
+            paymentMethod,
+          );
+          setShowBox(true);
+        } else {
+          const id = await ShopOrderApi.createShopOrderByProduct(
+            quantity[0] + purchaseItem[0].quantity,
+            purchaseItem[0].product.id,
+            'PROCESSING',
+          );
+          setIdOrder(id);
+          const result = await VNPayApi.submitOrder(totalPrice / 1000, orderInfo + id);
+          console.log(result);
+          const paymentUrl = result.paymentUrl;
+          console.log(result.data);
+          // Chuyển hướng người dùng đến trang thanh toán của VNPay
+          window.location.href = paymentUrl;
+        }
       } else {
-        await ShopOrderApi.createShopOrderByCart(isProduct, paymentMethod);
+        if (paymentMethod === 'NOT_PAY') {
+          await ShopOrderApi.createShopOrderByCart(isProduct, paymentMethod);
+          setShowBox(true);
+        } else {
+          const id = await ShopOrderApi.createShopOrderByCart(isProduct, 'PROCESSING');
+          setIdOrder(id);
+          const result = await VNPayApi.submitOrder(totalPrice / 1000, orderInfo + id);
+          console.log(result);
+          const paymentUrl = result.paymentUrl;
+          console.log(result.data);
+          // Chuyển hướng người dùng đến trang thanh toán của VNPay
+          window.location.href = paymentUrl;
+        }
       }
-      setShowBox(true);
     } catch (error) {
       alert('purchase fail');
+    }
+  };
+
+  const handlePurchaseByVNPay = async (totalPrice, orderInfo) => {
+    try {
+      const id = await ShopOrderApi.createShopOrderByCart(isProduct, 'NOT_PAY');
+      setIdOrder(id);
+      const result = await VNPayApi.submitOrder(totalPrice, orderInfo + id);
+      console.log(result);
+      const paymentUrl = result.paymentUrl;
+      console.log(result.data);
+      // Chuyển hướng người dùng đến trang thanh toán của VNPay
+      window.location.href = paymentUrl;
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -150,56 +195,69 @@ function Purchase(props) {
               ))
             )}
           </div>
-          <div className="purchase-checkout">
-            <div className="purchase-checkout-title">
-              <p>Thông tin đơn hàng</p>
-            </div>
-            <div className="purchase-checkout-content">
-              <div className="purchase-checkout-total-price">
-                <p className="purchase-checkout-text">Thành tiền</p>
-                <p className="purchase-checkout-price">{FormatPrice(totalPrice)}</p>
+          {purchaseItem.length !== 0 ? (
+            <div className="purchase-checkout">
+              <div className="purchase-checkout-title">
+                <p>Thông tin đơn hàng</p>
               </div>
-              <div className="purchase-checkout-total-price">
-                <p className="purchase-checkout-text">Địa chỉ giao hàng</p>
-                <p className="purchase-checkout-price">{userInfo.address}</p>
-              </div>
-              <div className="purchase-checkout-total-price">
-                <p className="purchase-checkout-text">Số điện thoại</p>
-                <p className="purchase-checkout-price">{userInfo.phone}</p>
-              </div>
+              <div className="purchase-checkout-content">
+                <div className="purchase-checkout-total-price">
+                  <p className="purchase-checkout-text">Thành tiền</p>
+                  <p className="purchase-checkout-price">{FormatPrice(totalPrice)}</p>
+                </div>
+                <div className="purchase-checkout-total-price">
+                  <p className="purchase-checkout-text">Địa chỉ giao hàng</p>
+                  <p className="purchase-checkout-price">{userInfo.address}</p>
+                </div>
+                <div className="purchase-checkout-total-price">
+                  <p className="purchase-checkout-text">Số điện thoại</p>
+                  <p className="purchase-checkout-price">{userInfo.phone}</p>
+                </div>
 
-              <p style={{ fontWeight: 'bold', marginBottom: '5px' }}>Phương thức thanh toán</p>
-              <div className="purchase-checkout-select-div">
-                <select
-                  style={{ marginBottom: '15px' }}
-                  className="purchase-checkout-select"
-                  onChange={(e) => setPaymentMethod(e.target.value)}
-                >
-                  <option key="1" value={'PAY'}>
-                    {'THANH TOÁN NGAY'}
-                  </option>
-                  <option key="2" value={'NOT_PAY'}>
-                    {'THANH TOÁN KHI NHẬN HÀNG'}
-                  </option>
-                </select>
-              </div>
-              <p style={{ fontWeight: 'bold', marginBottom: '5px' }}>Thông tin giao hàng</p>
-              <p style={{ fontSize: '16px' }}>
-                Đối với những sản phẩm có sẵn tại khu vực, Shop sẽ giao hàng trong vòng 2-7 ngày. Đối với những sản phẩm
-                không có sẵn, thời gian giao hàng sẽ được nhân viên thông báo đến quý khách.
-              </p>
-              <div className="purchase-checkout-button">
-                <button
-                  className="black-btn purchase-checkout-paybtn"
-                  onClick={() => {
-                    handleOrder();
-                  }}
-                >
-                  ĐẶT HÀNG
-                </button>
+                <p style={{ fontWeight: 'bold', marginBottom: '5px' }}>Phương thức thanh toán</p>
+                <div className="purchase-checkout-select-div">
+                  <select
+                    style={{ marginBottom: '15px' }}
+                    className="purchase-checkout-select"
+                    onChange={(e) => setPaymentMethod(e.target.value)}
+                  >
+                    <option key="1" value={'PAY'}>
+                      {'THANH TOÁN NGAY QUA'}
+                    </option>
+
+                    <option key="2" value={'NOT_PAY'}>
+                      {'THANH TOÁN KHI NHẬN HÀNG'}
+                    </option>
+                  </select>
+                  {paymentMethod === 'PAY' ? (
+                    <p style={{ fontWeight: 'bold', marginLeft: '5px', marginTop: '7px' }}>
+                      <img src={image} alt="vnpay" style={{ width: '70px' }} />
+                    </p>
+                  ) : (
+                    <></>
+                  )}
+                </div>
+
+                <p style={{ fontWeight: 'bold', marginBottom: '5px' }}>Thông tin giao hàng</p>
+                <p style={{ fontSize: '16px' }}>
+                  Đối với những sản phẩm có sẵn tại khu vực, Shop sẽ giao hàng trong vòng 2-7 ngày. Đối với những sản
+                  phẩm không có sẵn, thời gian giao hàng sẽ được nhân viên thông báo đến quý khách.
+                </p>
+                <div className="purchase-checkout-button">
+                  <button
+                    className="black-btn purchase-checkout-paybtn"
+                    onClick={() => {
+                      handleOrder(totalPrice, 'Thanh toan cho don hang id');
+                    }}
+                  >
+                    ĐẶT HÀNG
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
+          ) : (
+            <Fragment />
+          )}
         </div>
       </div>
       {isShowBox === false ? (

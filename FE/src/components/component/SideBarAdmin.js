@@ -83,31 +83,34 @@ function SideBarAdmin() {
               Product manager
             </button>
             <button
+              style={lastSegment === 'order' ? backGroundstyle : nonStyle}
               className={cx('sidebar-admin-btn')}
               onClick={() => {
-                navigate('/admin/product');
+                navigate('/admin/order');
               }}
             >
               <FontAwesomeIcon style={{ paddingRight: '10px' }} icon={faFileInvoiceDollar} />
               Order manager
             </button>
             <button
+              style={lastSegment === 'type' ? backGroundstyle : nonStyle}
               className={cx('sidebar-admin-btn')}
               onClick={() => {
-                navigate('/admin/product');
-              }}
-            >
-              <FontAwesomeIcon style={{ paddingRight: '10px' }} icon={faTag} />
-              Category manager
-            </button>
-            <button
-              className={cx('sidebar-admin-btn')}
-              onClick={() => {
-                navigate('/admin/product');
+                navigate('/admin/type');
               }}
             >
               <FontAwesomeIcon style={{ paddingRight: '10px' }} icon={faFile} />
               Type manager
+            </button>
+            <button
+              style={lastSegment === 'category' ? backGroundstyle : nonStyle}
+              className={cx('sidebar-admin-btn')}
+              onClick={() => {
+                navigate('/admin/category');
+              }}
+            >
+              <FontAwesomeIcon style={{ paddingRight: '10px' }} icon={faTag} />
+              Category manager
             </button>
           </div>
         </>

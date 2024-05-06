@@ -80,8 +80,8 @@ public class ShopOrderController {
 	@PostMapping(value = "/{cartid}")
 	public ResponseEntity<?> createShopOrderByCart(@PathVariable(value = "cartid") Integer cartId,
 			@RequestBody CreatingShopOrderForm form) {
-		service.createShopOrderByCart(cartId, form);
-		return new ResponseEntity<>("Create successfully! " + cartId, HttpStatus.OK);
+		Integer id = service.createShopOrderByCart(cartId, form);
+		return new ResponseEntity<>(id, HttpStatus.OK);
 	}
 
 	@PostMapping(value = "/product/{id}")
@@ -91,8 +91,8 @@ public class ShopOrderController {
 		String username = authentication.getName();
 
 		User myUser = userService.findUserByUsername(username);
-		service.createShopOrderByProduct(myUser, productId, quantity, form);
-		return new ResponseEntity<>("Create successfully! ", HttpStatus.OK);
+		Integer id = service.createShopOrderByProduct(myUser, productId, quantity, form);
+		return new ResponseEntity<>(id, HttpStatus.OK);
 	}
 
 	@DeleteMapping(value = "/{ids}")
