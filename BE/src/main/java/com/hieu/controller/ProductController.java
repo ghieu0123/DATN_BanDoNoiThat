@@ -30,6 +30,7 @@ import com.hieu.form.product.CreatingProductForm;
 import com.hieu.form.product.ProductFilterForm;
 import com.hieu.form.product.UpdatingProductForm;
 import com.hieu.service.IProductService;
+import com.hieu.service.IShopOrderService;
 import com.hieu.validation.product.ProductIDExists;
 
 @Validated
@@ -41,6 +42,9 @@ public class ProductController {
 	private IProductService service;
 
 	@Autowired
+	private IShopOrderService orderService;
+
+	@Autowired
 	private ModelMapper modelMapper;
 
 	@GetMapping()
@@ -48,7 +52,7 @@ public class ProductController {
 			@PageableDefault(sort = { "id" }, direction = Sort.Direction.ASC) Pageable pageable,
 			@RequestParam(value = "search", required = false) String search,
 			@RequestParam(value = "category", required = false) String category,
-			@RequestParam(value = "type",required = false) String type) {
+			@RequestParam(value = "type", required = false) String type) {
 		ProductFilterForm newForm = new ProductFilterForm(type);
 		Page<Product> entityPages = service.getAllProducts(pageable, search, category, newForm);
 
@@ -59,6 +63,16 @@ public class ProductController {
 
 		return new ResponseEntity<>(dtoPage, HttpStatus.OK);
 	}
+
+//	@GetMapping(value = "/apriori/{id}")
+//	public ResponseEntity<?> getProductApriori(@PathVariable(name = "id") @ProductIDExists Integer id) {
+//		Integer idResult = aprioriService.GetProductBySimpleApriori(orderService.getAll(), id);
+//		if (idResult == 0)
+//			return new ResponseEntity<>(idResult, HttpStatus.OK);
+//		Product entity = service.getProductByID(idResult);
+//		ProductDTO dto = modelMapper.map(entity, ProductDTO.class);
+//		return new ResponseEntity<>(dto, HttpStatus.OK);
+//	}
 
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<?> getProductByID(@PathVariable(name = "id") @ProductIDExists Integer id) {
@@ -89,7 +103,7 @@ public class ProductController {
 
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<?> updateProduct(@RequestBody UpdatingProductForm form,
-										   @PathVariable(name = "id") Integer id) {
+			@PathVariable(name = "id") Integer id) {
 		service.updateProduct(id, form);
 		return new ResponseEntity<>("Update successfully!", HttpStatus.OK);
 	}

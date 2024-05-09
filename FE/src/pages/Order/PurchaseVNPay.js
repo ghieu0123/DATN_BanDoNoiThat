@@ -71,6 +71,7 @@ function PurchaseVNPay() {
         ) : (
           <div className="w-50 m-auto">
             <h1 className="my-3 text-success text-center">Thanh toán thất bại</h1>
+            <h2 className="my-2">Đơn hàng đã bị hủy</h2>
             <Link to="/" className="btn btn-primary">
               Về trang chủ
             </Link>

@@ -76,7 +76,7 @@ function TypeManager(props) {
 
   useEffect(() => {
     getAllType(page);
-    console.log(typeData);
+    window.scrollTo(0, 0);
   }, [page]);
 
   return (

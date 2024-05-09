@@ -70,6 +70,10 @@ public class ShopOrderService implements IShopOrderService {
 		return repository.findByUser(user, pageable);
 	}
 
+	public List<ShopOrder> getAll() {
+		return repository.findAll();
+	}
+	
 	@Override
 	public ShopOrder getShopOrderByID(Integer id) {
 		return repository.findById(id).get();

@@ -18,7 +18,7 @@ public class CreatingProductForm {
 	@Length(min = 2, message = "The username's length is min 6 characters")
 	private String name;
 	
-	@NotBlank(message = "The collection mustn't be null value")
+//	@NotBlank(message = "The collection mustn't be null value")
 	private String collection;
 	
 	@NotNull(message = "The size mustn't be null value")

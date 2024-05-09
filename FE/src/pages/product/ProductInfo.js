@@ -15,6 +15,8 @@ import { selectIsPurchase, selectPurchaseItem } from '../../redux/selectors/Purc
 import { connect } from 'react-redux';
 import { getCartItemAction } from '../../redux/actions/CartAction';
 import { getPurchaseAction } from '../../redux/actions/PurchaseAction';
+import image from '../../assets/img/photos/image1.jpg';
+import { Link } from 'react-router-dom';
 
 //CSS
 // import '../../css/General.scss';
@@ -58,6 +60,7 @@ const ProductInfo = function ProductInfo(props) {
   const [isOpenModal, setOpenModal] = useState(false);
   const [isOpenModal2, setOpenModal2] = useState(false);
   const [productInfo, setProductInfo] = useState([]);
+  const [productCollection, setProductCollection] = useState([]);
   const [quantity, setQuantity] = useState(1);
   const [checkToken, setCheckToken] = useState(Storage.getToken());
   const navigate = useNavigate();
@@ -89,6 +92,8 @@ const ProductInfo = function ProductInfo(props) {
       const result = await ProductApi.getProductById(productId);
       product = { ...result };
       setProductInfo(product);
+      const result2 = await ProductApi.getAllProduct(1, 10, undefined, 'asc', result.collection, undefined, undefined);
+      setProductCollection(result2.content);
     } catch (error) {
       console.log(error);
     }
@@ -108,8 +113,28 @@ const ProductInfo = function ProductInfo(props) {
     }
   };
 
+  // const handleGetProductFromCollection = async () => {
+  //   try {
+  //     const result = await ProductApi.getAllProduct(
+  //       1,
+  //       10,
+  //       undefined,
+  //       'asc',
+  //       productInfo.collection,
+  //       undefined,
+  //       undefined,
+  //     );
+  //     setProductCollection(result.content);
+  //     console.log(result);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
   useEffect(() => {
+    // handleGetProductFromCollection();
     getData();
+    window.scrollTo(0, 0);
     // getPurchase(false, product);
     // setCheckToken(Storage.getToken());
     // console.log('show');
@@ -237,6 +262,29 @@ const ProductInfo = function ProductInfo(props) {
           </div>
         </>
       </div>
+      {productCollection != [] ? (
+        <div className="product-infor-other-product">
+          <img className="product-infor-other-product-img" src={image} alt="noithat" />
+          <div className="product-infor-other-product-title">
+            {' '}
+            <p>CÁC SẢN PHẨM TRONG CÙNG BỘ SƯU TẬP</p>
+          </div>
+          <div className="product-infor-other-product-content">
+            {productCollection.map((product) => (
+              <div className="product-infor-other-product-item" key={product.name}>
+                <div className="product-infor-other-product-image">
+                  <Link to={`/products/productinfo/${product.id}`}>
+                    <img src={product.image} alt={product.name} />
+                    <p>{product.name}</p>
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <></>
+      )}
 
       <Modal isOpen={isOpenModal2}>
         {/* body */}

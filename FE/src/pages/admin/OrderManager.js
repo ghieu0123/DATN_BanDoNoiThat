@@ -89,6 +89,7 @@ function OrderManager(props) {
   useEffect(() => {
     totalprice();
     getAllOrder(page, selectStatusValue);
+    window.scrollTo(0, 0);
   }, [page]);
 
   return (

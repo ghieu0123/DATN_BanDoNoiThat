@@ -16,6 +16,8 @@ public interface IShopOrderService {
 	
 	public Page<ShopOrder> getAllShopOrdersByUser(User user, String filter, Pageable pageable);
 
+	public List<ShopOrder> getAll();
+	
 	public ShopOrder getShopOrderByID(Integer id);
 
 	public boolean isShopOrderExistsByID(Integer id);

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ReactstrapInput } from 'reactstrap-formik';
 import { Button, Card, CardBody, FormGroup, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
@@ -7,7 +7,7 @@ import { TextInput } from '../../custom_/Text';
 import * as Yup from 'yup';
 import UserApi from '../../api/UserApi';
 import { withRouter } from 'react-router-dom';
-
+import NotifiBox4 from '../../components/component/box/NotifiBox4';
 const SignUp = (props) => {
   const [isOpenModal, setOpenModal] = useState(false);
 
@@ -15,12 +15,16 @@ const SignUp = (props) => {
 
   const [isDisableResendButton, setDisableResendButton] = useState(false);
 
+  const [isShow, setShow] = useState(false);
+
   const navigate = useNavigate();
 
   const resendEmailToActiveAccount = async () => {
+    setShow(true);
     setDisableResendButton(true);
     await UserApi.resendEmailToActiveAccount(email);
     setDisableResendButton(false);
+    setShow(false);
   };
 
   const redirectToLogin = () => {
@@ -87,7 +91,7 @@ const SignUp = (props) => {
         })}
         onSubmit={async (values) => {
           try {
-            console.log(values);
+            // console.log(values);
             // const userInfo = {
             //   username:values.username,
             //   email:values.email,
@@ -97,11 +101,12 @@ const SignUp = (props) => {
             // }
 
             // call api
+            setShow(true);
             await UserApi.create(values);
-
             // message
             setEmail(values.email);
             setOpenModal(true);
+            setShow(false);
           } catch (error) {
             console.log(error);
             // redirect page error server
@@ -222,7 +227,7 @@ const SignUp = (props) => {
 
                   <div className="text-center mt-3">
                     <Button
-                      className='white-btn'
+                      className="white-btn"
                       type="submit"
                       color="primary"
                       size="lg"
@@ -252,14 +257,15 @@ const SignUp = (props) => {
 
         {/* footer */}
         <ModalFooter>
-          <Button className='black-btn' onClick={resendEmailToActiveAccount} disabled={isDisableResendButton}>
+          <Button className="black-btn" onClick={resendEmailToActiveAccount} disabled={isDisableResendButton}>
             Resend
           </Button>{' '}
-          <Button className='white-btn' onClick={redirectToLogin}>
+          <Button className="white-btn" onClick={redirectToLogin}>
             Login
           </Button>
         </ModalFooter>
       </Modal>
+      {isShow === true ? <NotifiBox4 /> : <Fragment />}
     </>
   );
 };

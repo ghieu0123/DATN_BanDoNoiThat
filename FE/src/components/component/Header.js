@@ -23,28 +23,24 @@ function Header(props) {
   const location = useLocation();
   const getCartItem = props.getCartItemAction;
 
-  useEffect(() => {
-    const checkAuthentication = async () => {
-      const isAuthen = storage.getToken() !== null && storage.getToken() !== undefined;
-      setAuth(isAuthen);
+  const checkAuthentication = async () => {
+    const isAuthen = storage.getToken() !== null && storage.getToken() !== undefined;
+    setAuth(isAuthen);
 
-      if (isAuthen) {
-        try {
-          const userProfile = await UserApi.getProfile();
-          setUsername(userProfile.username);
-          if (userProfile.role === 'USER') {
-            setIsUser(true);
-          } else {
-            setIsUser(false);
-          }
-        } catch (error) {
-          console.error('Error fetching user profile:', error);
+    if (isAuthen) {
+      try {
+        const userProfile = await UserApi.getProfile();
+        setUsername(userProfile.username);
+        if (userProfile.role === 'USER') {
+          setIsUser(true);
+        } else {
+          setIsUser(false);
         }
+      } catch (error) {
+        console.error('Error fetching user profile:', error);
       }
-    };
-
-    checkAuthentication();
-  }, []);
+    }
+  };
 
   const handleLogout = () => {
     storage.removeToken();
@@ -53,8 +49,11 @@ function Header(props) {
     setIsUser(true);
     getCartItem([]);
     navigate('/');
-    // window.location.reload();
   };
+
+  useEffect(() => {
+    checkAuthentication();
+  }, [isAuth]);
 
   return (
     <div className={cx('wrapper')}>

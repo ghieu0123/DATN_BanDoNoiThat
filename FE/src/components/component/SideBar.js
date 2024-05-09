@@ -56,7 +56,7 @@ function SideBar(props) {
               console.log(lastSegment);
             }}
           >
-            <span>Sản phẩm</span>
+            <span>SẢN PHẨM</span>
           </Button>
           {/* PRODUCT BY ROOM */}
           <Button
@@ -66,7 +66,7 @@ function SideBar(props) {
               console.log(categoryData);
             }}
           >
-            <span>Living Room</span>
+            <span>PHÒNG KHÁCH</span>
           </Button>
           <Button
             style={categoryData === 'DiningRoom' ? backGroundstyle : nonStyle}
@@ -75,7 +75,7 @@ function SideBar(props) {
               // getCategory('DiningRoom');
             }}
           >
-            <span>Dining Room</span>
+            <span>PHÒNG ĂN</span>
           </Button>
           <Button
             style={categoryData === 'Bedroom' ? backGroundstyle : nonStyle}
@@ -84,7 +84,7 @@ function SideBar(props) {
               // getCategory('Bedroom');
             }}
           >
-            <span>Bed Room</span>
+            <span>PHÒNG NGỦ</span>
           </Button>
         </div>
         {/* Search */}
@@ -92,7 +92,7 @@ function SideBar(props) {
         {/* CART */}
         <Button onClick={() => (!isAuthenticated() ? navigate('/sign-in') : setOpen(!isOpen))}>
           <FontAwesomeIcon icon={faCartShopping} />
-          <span>Cart</span>
+          <span>CART</span>
         </Button>
       </div>
       {isOpen === false ? <Fragment /> : <Cart onClick={() => setOpen(!isOpen)} />}

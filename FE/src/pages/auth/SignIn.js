@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import '../../css/class.css';
 import { Button, Card, CardBody, FormGroup, CustomInput, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
@@ -14,6 +14,7 @@ import UserApi from '../../api/UserApi';
 import { render } from '@testing-library/react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import NotifiBox4 from '../../components/component/box/NotifiBox4';
 
 const handleShowErrorNotification = () => {
   toast.error('Login Fail! Wrong Username or Password!', {
@@ -48,6 +49,7 @@ const SignIn = (pathname) => {
   const [isRememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const [isShow, setShow] = useState(false);
 
   const handleButtonClick = () => {
     setOpenModal(false);
@@ -56,10 +58,12 @@ const SignIn = (pathname) => {
   };
 
   const resendEmailToActiveAccount = async () => {
+    setShow(true);
     setDisableResendButton(true);
     await UserApi.resendEmailToActiveAccount(email);
     Storage.setToken(null);
     setDisableResendButton(false);
+    setShow(false);
   };
 
   // rememberMe
@@ -154,7 +158,9 @@ const SignIn = (pathname) => {
             <CardBody className="auth">
               <div className="m-sm-4">
                 <div className="text-center">
-                  <img src={logo} alt="Chris Wood" className="img-fluid rounded-circle" width="132" height="132" />
+                  <Link to={'/'}>
+                    <img src={logo} alt="Chris Wood" className="img-fluid rounded-circle" width="132" height="132" />
+                  </Link>
                 </div>
                 <Form>
                   {/* username */}
@@ -251,6 +257,7 @@ const SignIn = (pathname) => {
           </Button>
         </ModalFooter>
       </Modal>
+      {isShow === true ? <NotifiBox4 /> : <Fragment />}
     </React.Fragment>
   );
 };

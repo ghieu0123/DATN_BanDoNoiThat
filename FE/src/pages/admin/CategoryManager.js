@@ -76,7 +76,7 @@ function CategoryManager(props) {
 
   useEffect(() => {
     getAllCategory(page);
-    console.log(categoryData);
+    window.scrollTo(0, 0);
   }, [page]);
 
   return (

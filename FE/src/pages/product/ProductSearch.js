@@ -10,6 +10,7 @@ import { selectProducts, selectPage, selectTotalSize, selectCategory } from '../
 import { selectType } from '../../redux/selectors/TypeSelector';
 import { getListProductAction } from '../../redux/actions/ProductAction';
 import { getTypeAction } from '../../redux/actions/TypeAction';
+import image3 from '../../assets/img/photos/image3.jpg';
 import {
   CardBody,
   CardHeader,
@@ -30,6 +31,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import FormatPrice from '../../components/checkprice/FormatPrice';
 import ShoppingCartApi from '../../api/ShoppingCartApi';
 import { selectCartItems } from '../../redux/selectors/CartSelector';
+import Storage from '../../storage/Storage';
 
 const handleShowSuccessNotification = (message) => {
   toast.success(message, {
@@ -49,7 +51,8 @@ function ProductHome(props) {
   const [totalPage, setTotalPage] = useState();
   const [page, setPage] = useState(1);
   const [selectValue, setSelectValue] = useState('');
-
+  const [selectSortValue, setSelectSortValue] = useState('id');
+  const [selectSortTypeValue, setSelectTypeValue] = useState('asc');
   let location = useLocation();
   const navigate = useNavigate();
 
@@ -69,6 +72,11 @@ function ProductHome(props) {
 
   // const categoryData = props.category;
 
+  const isAuthenticated = () => {
+    console.log(Storage.getToken());
+    return Storage.getToken() !== null && Storage.getToken() !== undefined;
+  };
+
   const handleAddProductToCart = async (productId) => {
     try {
       if (cartData === null) {
@@ -83,9 +91,9 @@ function ProductHome(props) {
     }
   };
 
-  const getAllProduct = async (page, type) => {
+  const getAllProduct = async (page, type, sortField, sortType) => {
     try {
-      const result = await ProductApi.getAllProduct(page, undefined, undefined, undefined, searchData, undefined, type);
+      const result = await ProductApi.getAllProduct(page, undefined, sortField, sortType, searchData, undefined, type);
       const products = result.content;
       setTotalPage(result.totalPages);
       total = result.totalPages;
@@ -108,8 +116,9 @@ function ProductHome(props) {
   };
 
   useEffect(() => {
-    getAllProduct(page, selectValue);
+    getAllProduct(page, selectValue, selectSortValue, selectSortTypeValue);
     getAllType();
+    window.scrollTo(0, 0);
   }, [page, searchData]);
 
   return (
@@ -121,13 +130,24 @@ function ProductHome(props) {
             {/* HEADER */}
             <CardHeader>
               <CardTitle tag="h5" className="mb-0">
-                <p className="product-home-title" style={{ textAlign: 'center', fontSize: '75px' }}>
-                  {/* {searchData === '' ? 'ALL PRODUCT' : searchData} */}
-                  Searching for "{searchData}"
-                </p>
+                <div className="product-home-title" style={{ height: '450px' }}>
+                  <img src={image3} alt="img" />
+                  <p style={{ marginTop: '20px', marginLeft: '20px' }}>Searching for "{searchData}"</p>
+                </div>
               </CardTitle>
               <div className="product-home-filter">
                 <div className="product-home-type">
+                  <select id="product-sort-select">
+                    <option key="0" value="Mức độ phổ biến">
+                      Mức độ phổ biến
+                    </option>
+                    <option key="1" value="Mức giá ↑">
+                      Mức giá ↑
+                    </option>
+                    <option key="2" value="Mức giá ↓">
+                      Mức giá ↓
+                    </option>
+                  </select>
                   <select id="product-type-select">
                     <option key="0" value="">
                       All
@@ -143,12 +163,38 @@ function ProductHome(props) {
                     onClick={() => {
                       const selectElement = document.getElementById('product-type-select');
                       const selectedValue = selectElement.value;
+                      const selectElement2 = document.getElementById('product-sort-select');
+                      const selectedValue2 = selectElement2.value;
+                      let sortField;
+                      let sortType;
+                      switch (selectedValue2) {
+                        case 'Mức độ phổ biến':
+                          sortField = 'id';
+                          sortType = 'desc';
+                          break;
+                        case 'Mức giá ↑':
+                          sortField = 'price';
+                          sortType = 'asc';
+                          break;
+                        case 'Mức giá ↓':
+                          sortField = 'price';
+                          sortType = 'desc';
+                          break;
+                        default:
+                          sortField = 'id';
+                          sortType = 'asc';
+                      }
+
+                      setSelectSortValue(sortField);
+                      setSelectTypeValue(sortType);
                       setSelectValue(selectedValue);
-                      getAllProduct(1, selectedValue);
-                      getAllProduct(1, selectedValue);
+                      getAllProduct(1, selectedValue, sortField, sortType);
+                      getAllProduct(1, selectedValue, sortField, sortType);
                       if (selectedValue != '') setPage(1);
                       if (selectedValue === '') setPage(1);
-                      console.log(selectedValue);
+                      if (selectSortValue != 'id') setPage(1);
+                      if (selectSortValue === 'id') setPage(1);
+                      // console.log(selectedValue);
                     }}
                   >
                     Lọc
@@ -178,7 +224,9 @@ function ProductHome(props) {
                         <button
                           // style={{ display: 'flex' }}
                           className="white-btn"
-                          onClick={() => handleAddProductToCart(product.id)}
+                          onClick={() =>
+                            !isAuthenticated() ? navigate('/sign-in') : handleAddProductToCart(product.id)
+                          }
                         >
                           {'+'}
                           <FontAwesomeIcon icon={faCartShopping} />

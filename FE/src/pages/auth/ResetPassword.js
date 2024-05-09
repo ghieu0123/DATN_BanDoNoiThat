@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
 
 import { Button, Card, CardBody, FormGroup, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { FastField, Form, Formik } from 'formik';
@@ -8,6 +8,7 @@ import * as Yup from 'yup';
 import UserApi from '../../api/UserApi';
 import { useNavigate, Link } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
+import NotifiBox4 from '../../components/component/box/NotifiBox4';
 
 const handleShowErrorNotification = () => {
   toast.success('Sending request to your Email! Please Check!!', {
@@ -26,16 +27,18 @@ const ResetPassword = (props) => {
   const [isOpenModal, setOpenModal] = useState(false);
 
   const [email, setEmail] = useState('');
-
+  const [isShow, setShow] = useState(false);
   const [isDisableResendButton, setDisableResendButton] = useState(false);
 
   const navigate = useNavigate();
 
   const resendEmailToResetPassword = async () => {
+    setShow(true);
     setDisableResendButton(true);
     await UserApi.resendEmailToResetpassword(email);
     handleShowErrorNotification();
     setDisableResendButton(false);
+    setShow(false);
   };
 
   const redirectToLogin = () => {
@@ -71,12 +74,14 @@ const ResetPassword = (props) => {
         })}
         onSubmit={async (values) => {
           try {
+            setShow(true);
             // call api
             await UserApi.requestResetPassword(values.email);
             handleShowErrorNotification();
             // message
             setEmail(values.email);
             setOpenModal(true);
+            setShow(false);
           } catch (error) {
             // redirect page error server
             navigate('/404');
@@ -102,7 +107,7 @@ const ResetPassword = (props) => {
                   </FormGroup>
 
                   <div className="text-center mt-3">
-                    <Button type="submit" className='white-btn' size="lg" disabled={isSubmitting}>
+                    <Button type="submit" className="white-btn" size="lg" disabled={isSubmitting}>
                       Reset password
                     </Button>
                   </div>
@@ -127,14 +132,15 @@ const ResetPassword = (props) => {
 
         {/* footer */}
         <ModalFooter>
-          <Button className='black-btn' onClick={resendEmailToResetPassword} disabled={isDisableResendButton}>
+          <Button className="black-btn" onClick={resendEmailToResetPassword} disabled={isDisableResendButton}>
             Resend
           </Button>{' '}
-          <Button className='white-btn' onClick={redirectToLogin}>
+          <Button className="white-btn" onClick={redirectToLogin}>
             Login
           </Button>
         </ModalFooter>
       </Modal>
+      {isShow === true ? <NotifiBox4 /> : <Fragment />}
     </React.Fragment>
   );
 };

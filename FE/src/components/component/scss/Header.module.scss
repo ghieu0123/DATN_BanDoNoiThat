@@ -1,8 +1,9 @@
 .wrapper {
+  padding-top: 10px;
   height: var(--default-layout-header-height);
   box-shadow: 0px 1px 1px rgb(0 0 0 / 12%);
   width: 100%;
-  background-color: bisque;
+  background-color: white;
   display: flex;
   z-index: 100;
 }
@@ -13,7 +14,7 @@
   position: absolute;
   display: flex;
   right: 0;
-  padding: 0 10px;
+  padding: 0 107px;
   padding-top: 5px;
 }
 
@@ -24,6 +25,8 @@
   cursor: pointer;
   border: none;
   background: none;
+  transition: 0.3s ease;
+  color: #777575;
   &:focus {
     text-decoration: underline;
     border: none;
@@ -33,7 +36,7 @@
     text-decoration: none !important;
     border: none;
     outline: none;
-    color: #8b8a8a;
+    color: black;
   }
 }
 

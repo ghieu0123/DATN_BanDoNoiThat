@@ -23,7 +23,7 @@ function Purchase(props) {
   const [paymentMethod, setPaymentMethod] = useState('PAY');
   const [isShowBox, setShowBox] = useState(false);
   const [idOrder, setIdOrder] = useState();
-
+  const [isPaying, setIsPaying] = useState(false);
   const navigate = useNavigate();
 
   const handleDecreasePrice = async (itemId, index, total) => {
@@ -83,6 +83,7 @@ function Purchase(props) {
           console.log(result);
           const paymentUrl = result.paymentUrl;
           console.log(result.data);
+          setIsPaying(true);
           // Chuyển hướng người dùng đến trang thanh toán của VNPay
           window.location.href = paymentUrl;
         }
@@ -91,12 +92,14 @@ function Purchase(props) {
           await ShopOrderApi.createShopOrderByCart(isProduct, paymentMethod);
           setShowBox(true);
         } else {
+          setIsPaying(true);
           const id = await ShopOrderApi.createShopOrderByCart(isProduct, 'PROCESSING');
           setIdOrder(id);
           const result = await VNPayApi.submitOrder(totalPrice / 1000, orderInfo + id);
           console.log(result);
           const paymentUrl = result.paymentUrl;
           console.log(result.data);
+
           // Chuyển hướng người dùng đến trang thanh toán của VNPay
           window.location.href = paymentUrl;
         }
@@ -123,8 +126,19 @@ function Purchase(props) {
 
   useEffect(() => {
     adddressPurchase();
-    console.log(purchaseItem.length);
-  }, []);
+    const beforeUnload = (e) => {
+      if (!isPaying) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+
+    window.addEventListener('beforeunload', beforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', beforeUnload);
+    };
+  }, [isPaying]);
   return (
     <>
       <div className="purchase-wrapper">

@@ -82,7 +82,7 @@ function UserManager(props) {
 
   useEffect(() => {
     getAllUser(page, selectSearchValue, selectRoleValue);
-    console.log(userData);
+    window.scrollTo(0, 0);
   }, [page]);
 
   return (

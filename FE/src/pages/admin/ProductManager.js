@@ -116,7 +116,7 @@ function UserManager(props) {
     getAllProduct(page, selectSearchValue, selectCategoryValue, selectTypeValue);
     getAllType();
     getAllCategory();
-    console.log(categoryData);
+    window.scrollTo(0, 0);
   }, [page]);
 
   return (

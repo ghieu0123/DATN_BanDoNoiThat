@@ -1,7 +1,8 @@
 .side-bar {
-  background-color: #f9f8f6;
+  background-color: White;
   height: var(--default-layout-sidebar-height);
-  box-shadow: 0px 1px 1px rgb(0 0 0 / 12%);
+  // box-shadow: 0px 1px 1px rgb(0 0 0 / 12%);
+  // border-bottom: 1px #ccc solid;
   // padding-left: 15px;
   // padding-right: 15px;
   display: flex;
@@ -11,12 +12,13 @@
   z-index: 999;
 }
 .content {
-  background-color: #f9f8f6;
+  background-color: rgb(255, 255, 255);
   height: 100%;
   width: var(--default-layout-sidebar-width);
   display: flex;
   align-items: center;
   justify-content: space-between;
+  box-shadow: 0px 1px 1px rgb(0 0 0 / 12%);
 }
 
 .logo img {
