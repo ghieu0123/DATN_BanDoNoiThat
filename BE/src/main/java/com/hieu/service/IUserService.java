@@ -9,6 +9,7 @@ import com.hieu.entity.User;
 import com.hieu.form.user.CreatingUserByAdminForm;
 import com.hieu.form.user.CreatingUserForm;
 import com.hieu.form.user.UpdatingUserForm;
+import com.hieu.form.user.UploadUserImageForm;
 import com.hieu.form.user.UserFilterForm;
 import com.hieu.form.user.UpdatingUserByAdminForm;
 
@@ -53,6 +54,8 @@ public interface IUserService{
 	void activeUser(String token);
 
 	void sendConfirmUserRegistrationViaEmail(String email);
+
+	public void uploadImage(Integer id, UploadUserImageForm form);
 	
 	
 }

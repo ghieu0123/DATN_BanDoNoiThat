@@ -61,7 +61,23 @@
       color: #848282;
     }
   }
-
+  &-info-price {
+    button {
+      background-color: #ccc;
+      color: black;
+      border: none;
+      margin: 0 5px;
+      outline: none;
+      transition: 0.3s ease;
+      &:hover {
+        background-color: #515151cc;
+      }
+      &:focus {
+        border: none;
+        outline: none;
+      }
+    }
+  }
   &-delete-btn {
     padding: 20px;
     height: 20px;
@@ -78,6 +94,10 @@
       outline: none;
     }
   }
+
+  // &-handle-price {
+  //   display: flex;
+  // }
 }
 
 .btn-close {

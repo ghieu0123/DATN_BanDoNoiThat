@@ -28,12 +28,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hieu.dto.ProfileDTO;
 import com.hieu.dto.UserDTO;
 import com.hieu.entity.User;
-import com.hieu.form.product.ProductFilterForm;
 import com.hieu.form.user.CreatingUserByAdminForm;
 import com.hieu.form.user.CreatingUserForm;
 import com.hieu.form.user.UpdatingUserByAdminForm;
 import com.hieu.form.user.UpdatingUserForm;
-import com.hieu.form.user.UserFilterForm;
+import com.hieu.form.user.UploadUserImageForm;
 import com.hieu.service.IUserService;
 import com.hieu.validation.user.UserIDExists;
 
@@ -124,6 +123,13 @@ public class UserController {
 		boolean result = service.existsUserByEmail(email);
 		
 		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+	
+	@PutMapping("/upload/{id}")
+	public ResponseEntity<?>uploadUserImage(@PathVariable(name = "id") Integer id,@RequestBody UploadUserImageForm form){
+		service.uploadImage(id, form);
+		
+		return new ResponseEntity<>("Upload image successfully!", HttpStatus.OK);
 	}
 	
 	// người dùng tự đăng ký

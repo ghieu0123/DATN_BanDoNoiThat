@@ -94,12 +94,19 @@
 
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
-			<artifactId>jjwt-jackson</artifactId> <!-- or jjwt-gson if Gson is
-			preferred -->
+			<artifactId>jjwt-jackson</artifactId> <!-- or jjwt-gson if Gson
+			ispreferred -->
 			<version>0.11.5</version>
 			<scope>runtime</scope>
 		</dependency>
-		
+
+		<!-- https://mvnrepository.com/artifact/com.cloudinary/cloudinary-http44 -->
+		<dependency>
+			<groupId>com.cloudinary</groupId>
+			<artifactId>cloudinary-http44</artifactId>
+			<version>1.33.0</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-mail</artifactId>

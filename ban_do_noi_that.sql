@@ -13,6 +13,7 @@ CREATE TABLE `User`(
     `password` 		VARCHAR(800) NOT NULL,
     `address`		VARCHAR(100) NOT NULL,
     `phone`			INT UNSIGNED NOT NULL,
+    `image`			TEXT,
     `firstName` 	NVARCHAR(50) NOT NULL,
 	`lastName` 		NVARCHAR(50) NOT NULL,
     `role` 			ENUM('ADMIN','MANAGER','USER') DEFAULT 'USER',
@@ -38,13 +39,13 @@ DROP TABLE IF EXISTS `Product`;
 CREATE TABLE `Product`(
 	`id`				INT AUTO_INCREMENT PRIMARY KEY,
     `name`				VARCHAR(100) NOT NULL UNIQUE KEY,
-    `collection`		VARCHAR(50)	 NOT NULL,
+    `collection`		VARCHAR(50),
     `size`				VARCHAR(50) NOT NULL,
     `typeId`			INT,
     `description`		TEXT NOT NULL,
     `material`			VARCHAR(50) NOT NULL,
     `price`				INT NOT NULL,
-    `image`				TEXT NOT NULL,
+    `image`				TEXT,
     `categoryId`		INT,
 	FOREIGN KEY (`categoryId`) REFERENCES `Category`(`id`) ON DELETE SET NULL,
     FOREIGN KEY (`typeId`) REFERENCES `Type`(`id`) ON DELETE SET NULL
@@ -165,8 +166,19 @@ VALUES
 ('Bàn nước Arena', 'PENNY', 'D1500 - R750 - C450 mm', 5, 'Sự đơn giản, tinh tế, sang trọng và không kém phần nổi bật của chiếc bàn mang âm hưởng Scandinavian này với lần lượt các phiên bản màu từ tối tới sáng sẽ mang đến ấn tượng đặc sắc cho từng không gian. Thiết kế vuông vức, thanh mảnh nhẹ nhàng là tất cả những yếu tố thiết yếu hội tụ ở chiếc bàn này.', 'Mặt bàn gỗ Ash - Chân kim loại', 7812000, 'https://lh3.googleusercontent.com/drive-viewer/AKGpihaSicROkJsFQaGxUi-wJ88Dll-LiI4hVNnWQ28d7M7YDzBIv26rFTUUGteNxx79n6YRZNsex97bzz1fopWuP-pTGOm59FWDyuk=s2560', 3),
 ('Sofa Bridge 3 chỗ hiện đại da đen', 'Bridge', 'D2100 - R900 - C750 mm', 6, 'Sofa Bridge 3 chỗ với phần khung ghế được làm từ gỗ sồi tự nhiên nhập khẩu từ Mỹ mang đến một thiết kế chắc chắn, bền vững theo thời gian. Điểm nhấn là phần tay vịn được gọt dũa tinh xảo với các đường vân gỗ cách điệu độc đáo. Những xúc chạm tinh tế sẽ được khơi nguồn khi chạm tay nhẹ lên bề mặt sản phẩm, vì chất liệu da tự nhiên cao cấp sẽ đem lại cảm giác mềm mại và chân thực. Sản phẩm có đa dạng lựa chọn với 3 màu sắc khác nhau: màu beige, màu cognac và màu đen. Sofa Bridge 3 chỗ là sản phẩm phù hợp cho không gian phòng khách sang trọng và tao nhã.', 'Khung ngoài từ gỗ sồi đặc tự nhiên nhập khẩu Mỹ', 115000000, 'https://lh3.googleusercontent.com/drive-viewer/AKGpihZqzotVKtUVk9wvvwJICmXBEPnhWUt0bLhRwEAMN4OUc6RVNp8IL9t93t3RHqRe27YLQ7WhmJRcqh5oR83omyOqepRnQuBDBcA=s2560', 3),
 ('Bàn nước Area', 'Area', 'D715 - R715 - C350mm', 5, 'Bàn nước Arena được thiết kế với bốn chân kim loại sơn đen kết hợp cùng hai thanh kim loại đan chéo nhau tạo thành tư thế trụ vững chắc. Mặt bàn tròn phủ da sang trọng với sự hòa quyện của hai tông màu đen và camel. Bao quanh bề mặt bàn là một lớp bọc phủ da camel được thiết kế ôm trọn mặt bàn giúp bảo vệ các vật bài trí nhỏ gọn, đồng thời, đây cũng là cách để tạo điểm nhấn cho không gian thêm hiện đại.', 'Chân kim loại - Da', 15000000, 'https://lh3.googleusercontent.com/drive-viewer/AKGpiha79jM3lnw-Uauf4ytIh4ZGmZCysW8okHidxjWc63fZcR3ItxwKbMTleHlkvNbEMWfmsceOUtGyZC8OQwF-x0F0RWqRrCUBCg=s2560', 3),
-('Tủ Buffet', 'Area', 'D1800 - R400 - C815 mm', 3, 'Chưa có bài đánh giá.', 'Gỗ Oak - MDF veneer Oak - Inox 304 màu gold', 29300000, 'https://lh3.googleusercontent.com/drive-viewer/AKGpiha8NDvT0azNbObR2dTuS8fvcRddhNOb3xpk5VlG_TyRlaobSV75NsETMYNqKsHTGegGeTN0Cl2E30CpoCR-CZXMxhpoCgwYAE0=s2560', 3);
-
+('Tủ Buffet', 'Area', 'D1800 - R400 - C815 mm', 3, 'Chưa có bài đánh giá.', 'Gỗ Oak - MDF veneer Oak - Inox 304 màu gold', 29300000, 'https://lh3.googleusercontent.com/drive-viewer/AKGpiha8NDvT0azNbObR2dTuS8fvcRddhNOb3xpk5VlG_TyRlaobSV75NsETMYNqKsHTGegGeTN0Cl2E30CpoCR-CZXMxhpoCgwYAE0=s2560', 3),
+('Giường ngủ gỗ Maxine 1m8', 'Maxine', 'D2000 - R1800 - C1260', 1, 'Giường ngủ gỗ Maxine 1m8 với đường nét hài hòa cùng thiết kế tinh xảo tạo vẻ ngoài sang trọng. Sản phẩm sử dụng khung gỗ hoàn thiện MDF veneer Walnut nên rất chắc chắn. Sản phẩm đem đến trải nghiệm thư giãn giúp bạn tận hưởng trọn vẹn giấc ngủ ngon.', 'Khung gỗ Okumi', 33000000, 'https://lh3.googleusercontent.com/drive-viewer/AKGpihZX2-AZDj9r_YJeBsuiHV253pxo-sFPkfDv7rUj52oLdaiuRA7vXskqL9PlZcelyLtVkkckpfNQeEleLSDqJWEjWiEGKuJSVME=s2560', 1),
+('Ghế xoay văn phòng Maxine', 'Maxine', 'D590 - R650 - C1160 mm', 4, 'Chưa có bài đánh giá.', 'lưng ghế ốp gỗ ép Walnut - nệm bọc da tổng hợp', 33600000, 'https://lh3.googleusercontent.com/drive-viewer/AKGpihYNBBbwe26MkLSzoOxxUbsyrJ2A8fKNpK4xvLX4x6nOqWnxxq2xU977xqpofxD3oaZYJpw1AngMYBK0BQ4032bISivdK4YYIw=s2560', 1),
+('Bàn làm việc Maxine', 'Maxine', 'D1800-R750/1180-C750', 5, 'Một thiết kế bàn làm việc đẳng cấp cho không gian làm việc của bạn, Maxine sử dụng chất liệu da trên bề mặt, khung gỗ hoàn thiện mdf veneer nâu trầm sang trọng tạo cảm giác thư thái, nhẹ nhàng.', 'MDF veneer recon Walnut', 51000000, 'https://lh3.googleusercontent.com/drive-viewer/AKGpihacla05tKuDvAZku04GCEfXjndN6Kf6tYaLjD-XnCDonscPI7RFxx4wevdbfJwwbQ_7p5AX_u1tC4u5HNilsZse-gx-G5klpmY=s2560', 1),
+('Bàn đầu giường Skagen', 'Skagen', 'D400-R320-C507', 5, 'Chưa có bài đánh giá.', 'Gỗ + MDF Veneer Walnut', 22700000, 'https://lh3.googleusercontent.com/drive-viewer/AKGpihaaPII4z6qbyvdKtnZMgxrMAm4OKgUJ6-MOrDpReviE1OMUrJMNkSL-yHKjigZSGPfTD1om8En-ZEO2SzBzIOFoZwCGIQAdmZs=s2560', 1),
+('Bàn ăn 6 chỗ Coastal', 'Kazad', 'D1600 - R800 - C755 mm', 5, 'Bàn ăn Coastal được làm từ gỗ Ash, theo phong cách truyền thống và mang kết cấu vững chãi. Mặt bàn bằng phẳng với các đường vân tự nhiên, bốn cạnh được bo tròn mềm mại để tránh va chạm trong lúc sử dụng.', 'Gỗ Ash - MDF veneer Ash', 13600000, 'https://lh3.googleusercontent.com/drive-viewer/AKGpihbU3SzVTwn_hj2FVY1-rsg62b_yxY_JO8NBYCH2bnW6xHY7DAAyuOybNCWHMsNfvWQyXLjDmGODPkK8jFQJoWlQellDBFgGZS0=s2560', 2),
+('Ghế ăn Coastal KD1085-18', 'Kazad', 'D435 - R525 - C840 mm', 4, 'Coastal mang đậm chất Việt khi khéo léo dung hòa được những nét đẹp lấy cảm hứng từ miền duyên hải nước ta với các vật liệu cao cấp, lối thiết kế hiện đại. Ghế ăn Coastal với bốn chân gỗ chắc chắn, được bọc vải êm ái cùng thiết kế phù hợp với thể trạng người Việt.', 'Gỗ Ash - nệm bọc vải', 5200000, 'https://lh3.googleusercontent.com/drive-viewer/AKGpiha5w6u_6wvtkmWsDxuBtF8OPudgzHtVRK9TB457p-W7LCD0uZ96r035e2yIoIkLsWU5rwCbTw6QRusLnfUFE6UvvN0s84YtFSc=s2560', 2),
+('Bàn ăn Mây 1m8', 'Mây', 'D1800 - R900 - C740', 5, 'Bàn ăn Mây sử dụng đá marble trắng cùng thiết kế đặc biệt với kết cấu chân được đan xen vừa tạo độ vững chắc và điểm nhấn cho không gian phòng ăn. Ngoài ra, phần kính trên bề mặt giúp phô diễn vẻ đẹp của chất liệu mây.', 'Gỗ tần bì', 39300000, 'https://lh3.googleusercontent.com/drive-viewer/AKGpihZ-7K59eQHZ6u91Z7cEfqXZLtEJCIHKseNtBwaw54kSI7vFEOHwRkfmXV9yu9PxLwR3QTSWQiEhc5_rGuOeNmjRAfIr72wrrG4=s2560', 2),
+('Ghế ăn không tay Elegance', 'Elegance', 'D430 - R505 - C790 mm', 4, 'Ghế Elegance được làm từ gỗ Tần bì Mỹ. Bề mặt ngồi được thiết kế tỉ mỉ với sự đan xen của những sợi dây thừng cao cấp nhập khẩu từ Đức. Với đặc điểm chống nước tốt cùng khả năng đàn hồi cao, sản phẩm hứa hẹn sẽ đem lại trải nghiệm thú vị cho người dùng.', 'Gỗ Ash (tần bì) đặc tự nhiên nhập khẩu từ Mỹ', 16300000, 'https://lh3.googleusercontent.com/drive-viewer/AKGpihbIFxt1iELR9rKS9Atugylx4x6FjvjwHwMKFzruNTK1qvifR9PPkm2c8mm97EN4MWh3GpsKLYQl-lnYqn70dSSo8N7Ea1c3m_Y=s2560', 3),
+('Tủ tivi Mây', 'Mây', 'D1850- R420- C550 mm', 3, 'Chưa có bài đánh giá.', 'Gỗ Acacia- Mặt Laminate', 25300000, 'https://lh3.googleusercontent.com/drive-viewer/AKGpihbPZfVuwgya23YJEzDTwaZ6tG6vP9EAHvbFR_ucQREbC_fIshbXUzpiUZalRkYgMWBbfN96FDYRHEef4cdcK5dVX98oLqPmArM=s2560', 3),
+('Sofa Jadora 2.5 chỗ vải VACT4029', 'Jadora', 'D2200 - R1200 - C650/850 mm', 6, 'Sofa Jadora là sản phẩm được thiết kế và sản xuất bởi Nhà Xinh. Với kiểu dáng rộng rãi cùng đệm ngồi êm ái, Jadora hứa hẹn sẽ mang đến cho người dùng trải nghiệm thư thái nhất.', 'Khung gỗ - Nệm bọc vải 2 màu - 5 gối', 34300000, 'https://lh3.googleusercontent.com/drive-viewer/AKGpihZy3YkTKS-lH2nASgN-Jvfy7NVmArGJuBVZujv3P5iZXjzNjJCdV0xx7MmYgHFt89ezGEeNAwW5aiPXEkt34BYd60rB93JIVRg=s2560', 3),
+('Bàn nước tròn Elegance', 'Elegance', 'Ø900- C550 mm', 5, 'Với chất liệu MDF bọc giả da cá đuối và 3 chân kim loại thanh mảnh nhưng vững vàng cho phòng khách thêm thoáng mà vẫn có nhiều không gian để tiếp khách. Thành bàn cao hơn mặt bàn giúp cho đồ vật khó bị rơi và việc vệ sinh cũng trở nên tiện lợi hơn.', 'Chân inox màu gold- MDF bọc giả da cá đuối', 13500000, 'https://lh3.googleusercontent.com/drive-viewer/AKGpihZI0DmgTLkdk2uk8YyB4vdg0crorcqAMOlO7cMJmMzXEji6KX5WIhCLNY8Lqj0NuNZw6HRw9do3XtHxoirUj_Co9_w7ghfZB74=s2560', 3),
+('Đèn bàn Gianfranco Vintage', 'Gianfranco', '170x410x630 mm', 2, 'Chưa có bài đánh giá.', 'Inox 304 màu gold', 32300000, 'https://lh3.googleusercontent.com/drive-viewer/AKGpihYslqQDlT3Og9LVNuwdOFDFWjOo6YeMb2j3EinwsAgADOPLVxL589buRKAmiCy3klNKAGImFJPdgzqNsVvK5SqDoxNM-8yC8Yo=s2560', 3);
 
 INSERT INTO `ShopOrder` (`orderDate`, `totalPrice`, `addressShipping`, `orderStatus`, `userId`)
 VALUES 
@@ -179,7 +191,7 @@ VALUES
 INSERT INTO `ShoppingCart` (`userId`, `createdDate`)
 VALUES 
 (1, '2024-01-05'),
-(1, '2024-02-05'),
+(2, '2024-02-05'),
 (3, '2024-03-05'),
 (4, '2024-04-05'),
 (5, '2024-05-05');
@@ -188,6 +200,7 @@ INSERT INTO `ShoppingCartItem` (`quantity`, `productId`, `shoppingCartId`)
 VALUES 
 (2, 1, 1),
 (1, 2, 1),
+(1, 2, 2),
 (3, 3, 3),
 (1, 4, 4),
 (2, 5, 5);
@@ -207,4 +220,3 @@ VALUES
 ('2024-03-22 12:00:00', 3, 3),
 ('2024-03-23 13:00:00', 4, 4),
 ('2024-03-24 14:00:00', 5, 5);
-

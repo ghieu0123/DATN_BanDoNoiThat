@@ -49,7 +49,7 @@ public class Product implements Serializable{
 	@Column(name = "price", nullable = false)
 	private Integer price;
 	
-	@Column(name = "image", nullable = false)
+	@Column(name = "image", nullable = true)
 	private String image;
 	
 	@ManyToOne

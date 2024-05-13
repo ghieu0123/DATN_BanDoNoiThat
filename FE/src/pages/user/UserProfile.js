@@ -7,9 +7,11 @@ import { ReactstrapInput } from 'reactstrap-formik';
 import { TextInput } from '../../custom_/Text';
 import * as Yup from 'yup';
 import UserApi from '../../api/UserApi';
+import UploadApi from '../../api/UploadApi';
 import { withRouter } from 'react-router-dom';
 import Storage from '../../storage/Storage';
 import { ToastContainer, toast } from 'react-toastify';
+import NotifiBox3 from '../../components/component/box/NotifiBox3';
 
 const handleShowErrorNotification = () => {
   toast.success('Update account successfully!!', {
@@ -23,10 +25,15 @@ const handleShowErrorNotification = () => {
     progress: undefined,
   });
 };
+
 const UserProfile = (props) => {
   const useStorage = Storage.getUserInfo();
   const [userInfo, setUserInfo] = useState(useStorage);
   const [isShow, setShow] = useState(false);
+  const [isShow2, setShow2] = useState(false);
+  const [image, setImage] = useState(null);
+  const [imageUrl, setImageUrl] = useState(null);
+
   const navigate = useNavigate();
 
   const userResult = async () => {
@@ -34,6 +41,42 @@ const UserProfile = (props) => {
       const result = await UserApi.getByUsername(useStorage.username);
       Storage.setUserInfo(result);
       setUserInfo(result);
+      // console.log(result);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      setImage(file);
+      setImageUrl(reader.result);
+    };
+
+    if (file && file.type.match('image.*')) {
+      reader.readAsDataURL(file);
+    } else {
+      setImage(null);
+    }
+  };
+
+  const handleUploadImage = async () => {
+    try {
+      const uploadResult = await UploadApi.upload(image, 'user_image');
+      if (userInfo.image === null) {
+        const result = await UserApi.uploadProfileImage(userInfo.userId, uploadResult.url);
+        // console.log(uploadResult.url);
+      } else {
+        const image_public_id = userInfo.image;
+        const imageName = image_public_id.split('/').pop().split('.')[0];
+        await UploadApi.deleteUserImage(imageName);
+        const result = await UserApi.uploadProfileImage(userInfo.userId, uploadResult.url);
+        // console.log(result);
+      }
+      userResult();
     } catch (error) {
       console.log(error);
     }
@@ -51,15 +94,26 @@ const UserProfile = (props) => {
           {'<'}
         </button>
         <div className="user-update-left-tab">
-          <svg
-            className="user-update-svg-icon"
-            style={{ verticalAlign: 'middle', fill: 'currentColor', overflow: 'hidden' }}
-            viewBox="0 0 1024 1024"
-            version="1.1"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path d="M843.282963 870.115556c-8.438519-140.515556-104.296296-257.422222-233.908148-297.14963C687.881481 536.272593 742.4 456.533333 742.4 364.088889c0-127.241481-103.158519-230.4-230.4-230.4S281.6 236.847407 281.6 364.088889c0 92.444444 54.518519 172.183704 133.12 208.877037-129.611852 39.727407-225.46963 156.634074-233.908148 297.14963-0.663704 10.903704 7.964444 20.195556 18.962963 20.195556l0 0c9.955556 0 18.299259-7.774815 18.962963-17.73037C227.745185 718.506667 355.65037 596.385185 512 596.385185s284.254815 122.121481 293.357037 276.195556c0.568889 9.955556 8.912593 17.73037 18.962963 17.73037C835.318519 890.311111 843.946667 881.019259 843.282963 870.115556zM319.525926 364.088889c0-106.287407 86.186667-192.474074 192.474074-192.474074s192.474074 86.186667 192.474074 192.474074c0 106.287407-86.186667 192.474074-192.474074 192.474074S319.525926 470.376296 319.525926 364.088889z" />
-          </svg>
+          {userInfo.image === '' || userInfo.image === null ? (
+            <svg
+              className="user-update-svg-icon"
+              style={{ verticalAlign: 'middle', fill: 'currentColor', overflow: 'hidden' }}
+              viewBox="0 0 1024 1024"
+              version="1.1"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M843.282963 870.115556c-8.438519-140.515556-104.296296-257.422222-233.908148-297.14963C687.881481 536.272593 742.4 456.533333 742.4 364.088889c0-127.241481-103.158519-230.4-230.4-230.4S281.6 236.847407 281.6 364.088889c0 92.444444 54.518519 172.183704 133.12 208.877037-129.611852 39.727407-225.46963 156.634074-233.908148 297.14963-0.663704 10.903704 7.964444 20.195556 18.962963 20.195556l0 0c9.955556 0 18.299259-7.774815 18.962963-17.73037C227.745185 718.506667 355.65037 596.385185 512 596.385185s284.254815 122.121481 293.357037 276.195556c0.568889 9.955556 8.912593 17.73037 18.962963 17.73037C835.318519 890.311111 843.946667 881.019259 843.282963 870.115556zM319.525926 364.088889c0-106.287407 86.186667-192.474074 192.474074-192.474074s192.474074 86.186667 192.474074 192.474074c0 106.287407-86.186667 192.474074-192.474074 192.474074S319.525926 470.376296 319.525926 364.088889z" />
+            </svg>
+          ) : (
+            <div className="user-update-image-div">
+              <div className="user-update-image-profile">
+                <img src={userInfo.image} alt="image" />
+              </div>
+            </div>
+          )}
+          <button className="black-btn user-update-image-btn" onClick={() => setShow2(true)}>
+            Upload profile image
+          </button>
           <p>Xin chào! {userInfo.username}</p>
         </div>
         <div className="user-update-right-tab">
@@ -234,6 +288,37 @@ const UserProfile = (props) => {
               </Formik>
             </div>
           </div>
+        )}
+        {isShow2 === false ? (
+          <Fragment />
+        ) : (
+          <NotifiBox3
+            isbtn1={true}
+            isbtn2={true}
+            btnname1={'Save'}
+            btnname2={'Close'}
+            action1={() => {
+              if (image === null || image === '') {
+                setShow(false);
+              }
+              handleUploadImage();
+              setShow2(false);
+              setImageUrl();
+              setImage();
+            }}
+            action2={() => {
+              setShow2(false);
+              setImageUrl();
+              setImage();
+            }}
+            title="Upload image"
+            content={
+              <div className="user-upload-box">
+                <input type="file" accept="image/*" onChange={handleImageUpload} />
+                {imageUrl && <img src={imageUrl} alt="Uploaded" />}
+              </div>
+            }
+          />
         )}
       </div>
     </div>

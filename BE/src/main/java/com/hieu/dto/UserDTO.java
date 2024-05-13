@@ -32,6 +32,8 @@ public class UserDTO {
 	
 	private Role role;
 	
+	private String image;
+	
 	private UserStatus userStatus;
 	
 	private List<ShoppingCartDTO> shoppingCarts;

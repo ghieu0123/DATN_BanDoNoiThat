@@ -46,6 +46,9 @@ public class User implements Serializable {
 	@Column(name = "`phone`", nullable = false)
 	private Integer phone;
 	
+	@Column(name = "`image`")
+	private String image;
+	
 	@Column(name = "`firstName`", length = 50, nullable = false)
 	private String firstName;
 	

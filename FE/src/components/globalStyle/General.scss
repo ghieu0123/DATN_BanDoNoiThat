@@ -663,11 +663,32 @@ a[href] {
   //   width: 100%;
   //   height: 100%;
   // }
+
   &-back-btn {
     height: 40px;
     padding: 0 15px;
     margin-left: -100px;
     margin-right: 100px;
+  }
+  &-image-div {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  &-image-profile {
+    width: 284px;
+    height: 284px;
+    border-radius: 50%;
+    overflow: hidden;
+    img {
+      object-fit: cover;
+      width: 100%;
+      height: 100%;
+    }
+  }
+  &-image-btn {
+    margin-top: 30px;
+    padding: 15px 20px;
   }
   &-public-lable {
     font-size: 30px;
@@ -756,6 +777,20 @@ a[href] {
   &-close-btn {
     padding: 6px 10px 8px 10px;
     margin-right: 20px;
+  }
+}
+
+.user-upload {
+  &-box {
+    height: 280px;
+    width: 450px;
+    background-color: #ccc;
+    padding: 30px;
+    img {
+      margin-top: 10px;
+      width: 200px;
+      height: 200px;
+    }
   }
 }
 

@@ -24,8 +24,14 @@ const create = (values) => {
     firstName: values.firstName,
     lastName: values.lastName,
   };
-  console.log(body);
   return Api.post(`${url}`, body);
+};
+
+const uploadProfileImage = (id, image) => {
+  const body = {
+    image: image,
+  };
+  return Api.put(`${url}/upload/${id}`, body);
 };
 
 const resendEmailToActiveAccount = (email) => {
@@ -140,5 +146,6 @@ const api = {
   getById,
   updateUser,
   updateByAdmin,
+  uploadProfileImage,
 };
 export default api;

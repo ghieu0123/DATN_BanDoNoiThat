@@ -39,10 +39,24 @@ function Cart({ onClick, ...props }) {
       console.log(error);
     }
   };
-  useEffect(() => {
-    getCart();
-    console.log(cartData);
-  }, []);
+
+  const handleIncreaseCartItem = async (idItemCart) => {
+    try {
+      await ShoppingCartApi.increaseItemInCart(cartId, idItemCart);
+      getCart();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleDecreaseCartItem = async (idItemCart) => {
+    try {
+      await ShoppingCartApi.decreaseItemInCart(cartId, idItemCart);
+      getCart();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleDeleteCartItem = async () => {
     try {
@@ -65,6 +79,11 @@ function Cart({ onClick, ...props }) {
     }
   };
 
+  useEffect(() => {
+    getCart();
+    // console.log(cartData);
+  }, []);
+
   return (
     <>
       <div className={cx('wrapper')}>
@@ -81,9 +100,27 @@ function Cart({ onClick, ...props }) {
 
                     <div className={cx('list-product-info')}>
                       <p className={cx('list-product-info-name')}>{item.product.name}</p>
-                      <p className={cx('list-product-info-price')}>
-                        {item.quantity} x {FormatPrice(item.product.price)}
-                      </p>
+                      <div className={cx('list-product-info-price')}>
+                        {/* <div className={cx('list-product-handle-price')}> */}
+                        <button
+                          onClick={() => {
+                            handleDecreaseCartItem(item.product.id);
+                          }}
+                        >
+                          {'<'}
+                        </button>
+                        <>{item.quantity}</>
+                        <button
+                          onClick={() => {
+                            handleIncreaseCartItem(item.product.id);
+                          }}
+                        >
+                          {'>'}
+                        </button>
+                        <>{' x '}</>
+                        <>{FormatPrice(item.product.price)}</>
+                        {/* </div> */}
+                      </div>
                     </div>
                     <button
                       onClick={() => {

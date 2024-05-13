@@ -12,9 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.hieu.entity.Category;
 import com.hieu.entity.Product;
 import com.hieu.entity.Type;
+import com.hieu.entity.User;
 import com.hieu.form.product.CreatingProductForm;
 import com.hieu.form.product.ProductFilterForm;
 import com.hieu.form.product.UpdatingProductForm;
+import com.hieu.form.product.UploadProductImageForm;
 import com.hieu.repository.ICategoryRepository;
 import com.hieu.repository.IProductRepository;
 import com.hieu.repository.ITypeRepository;
@@ -120,5 +122,14 @@ public class ProductService implements IProductService{
 	@Transactional
 	public void deleteProduct(List<Integer> ids) {
 		repository.deleteByIdIn(ids);
+	}
+
+	@Override
+	@Transactional
+	public void uploadImage(Integer id, UploadProductImageForm form) {
+		Product myProduct = repository.findById(id).get();
+		myProduct.setImage(form.getImage());
+		
+		repository.save(myProduct);
 	}
 }

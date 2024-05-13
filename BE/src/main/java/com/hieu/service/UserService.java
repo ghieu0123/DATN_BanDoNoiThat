@@ -24,6 +24,7 @@ import com.hieu.event.OnSendRegistrationUserConfirmViaEmailEvent;
 import com.hieu.form.user.CreatingUserByAdminForm;
 import com.hieu.form.user.UpdatingUserByAdminForm;
 import com.hieu.form.user.UpdatingUserForm;
+import com.hieu.form.user.UploadUserImageForm;
 import com.hieu.form.user.UserFilterForm;
 import com.hieu.repository.IUserRepository;
 import com.hieu.repository.RegistrationUserTokenRepository;
@@ -245,5 +246,14 @@ public class UserService implements IUserService {
 	@Override
 	public void sendConfirmUserRegistrationViaEmail(String email) {
 		eventPublisher.publishEvent(new OnSendRegistrationUserConfirmViaEmailEvent(email));
+	}
+
+	@Override
+	@Transactional
+	public void uploadImage(Integer id, UploadUserImageForm form) {
+		User myUser = repository.findById(id).get();
+		myUser.setImage(form.getImage());
+		
+		repository.save(myUser);
 	}
 }

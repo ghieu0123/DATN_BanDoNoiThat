@@ -9,6 +9,7 @@ import com.hieu.entity.Product;
 import com.hieu.form.product.CreatingProductForm;
 import com.hieu.form.product.ProductFilterForm;
 import com.hieu.form.product.UpdatingProductForm;
+import com.hieu.form.product.UploadProductImageForm;
 
 public interface IProductService {
 	public Page<Product> getAllProducts(Pageable pageable, String search, String category, ProductFilterForm filter);
@@ -24,4 +25,6 @@ public interface IProductService {
 	public void updateProduct(Integer id, UpdatingProductForm form);
 
 	public void deleteProduct(List<Integer> ids);
+
+	public void uploadImage(Integer id, UploadProductImageForm form);
 }

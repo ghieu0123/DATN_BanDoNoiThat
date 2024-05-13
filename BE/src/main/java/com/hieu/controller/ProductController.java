@@ -29,6 +29,7 @@ import com.hieu.entity.Product;
 import com.hieu.form.product.CreatingProductForm;
 import com.hieu.form.product.ProductFilterForm;
 import com.hieu.form.product.UpdatingProductForm;
+import com.hieu.form.product.UploadProductImageForm;
 import com.hieu.service.IProductService;
 import com.hieu.service.IShopOrderService;
 import com.hieu.validation.product.ProductIDExists;
@@ -106,6 +107,13 @@ public class ProductController {
 			@PathVariable(name = "id") Integer id) {
 		service.updateProduct(id, form);
 		return new ResponseEntity<>("Update successfully!", HttpStatus.OK);
+	}
+	
+	@PutMapping("/upload/{id}")
+	public ResponseEntity<?>uploadProductImage(@PathVariable(name = "id") Integer id, @RequestBody UploadProductImageForm form){
+		service.uploadImage(id, form);
+		
+		return new ResponseEntity<>("Upload image successfully!", HttpStatus.OK);
 	}
 
 	@DeleteMapping(value = "/{ids}")
