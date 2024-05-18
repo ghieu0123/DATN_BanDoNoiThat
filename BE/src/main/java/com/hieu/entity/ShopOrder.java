@@ -39,7 +39,7 @@ public class ShopOrder implements Serializable{
 	private Integer id;
 	
 	@Column(name = "orderDate", nullable = false)
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.DATE)
 	@CreationTimestamp
 	private Date orderDate;
 	

@@ -92,7 +92,7 @@ function SideBar(props) {
         {/* CART */}
         <Button onClick={() => (!isAuthenticated() ? navigate('/sign-in') : setOpen(!isOpen))}>
           <FontAwesomeIcon icon={faCartShopping} />
-          <span>CART</span>
+          <span>Giỏ hàng</span>
         </Button>
       </div>
       {isOpen === false ? <Fragment /> : <Cart onClick={() => setOpen(!isOpen)} />}

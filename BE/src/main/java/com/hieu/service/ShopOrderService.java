@@ -1,6 +1,7 @@
 package com.hieu.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
@@ -13,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.hieu.entity.Payment;
 import com.hieu.entity.Product;
-import com.hieu.entity.Role;
 import com.hieu.entity.ShopOrder;
 import com.hieu.entity.ShopOrderItem;
 import com.hieu.entity.ShopOrderStatus;
@@ -22,14 +22,12 @@ import com.hieu.entity.ShoppingCartItem;
 import com.hieu.entity.User;
 import com.hieu.form.shoporder.CreatingShopOrderForm;
 import com.hieu.form.shoporder.UpdatingShopOrderForm;
-import com.hieu.form.user.UserFilterForm;
 import com.hieu.repository.IPaymentRepository;
 import com.hieu.repository.IProductRepository;
 import com.hieu.repository.IShopOrderItemRepository;
 import com.hieu.repository.IShopOrderRepository;
 import com.hieu.repository.IShoppingCartRepository;
 import com.hieu.specification.shoporder.ShopOrderSpecification;
-import com.hieu.specification.user.UserSpecification;
 
 @Service
 public class ShopOrderService implements IShopOrderService {
@@ -53,10 +51,10 @@ public class ShopOrderService implements IShopOrderService {
 	private ModelMapper modelMapper;
 
 	@Override
-	public Page<ShopOrder> getAllShopOrders(String filter, Pageable pageable) {
+	public Page<ShopOrder> getAllShopOrders(Date minDate, Date maxDate, String filter, Pageable pageable) {
 		if (filter != null) {
 //			ShopOrderStatus status = ShopOrderStatus.valueOf(filter.toUpperCase());
-			Specification<ShopOrder> where = ShopOrderSpecification.buildWhere(filter);
+			Specification<ShopOrder> where = ShopOrderSpecification.buildWhere(minDate, maxDate, filter);
 			return repository.findAll(where, pageable);
 		}
 		return repository.findAll(pageable);

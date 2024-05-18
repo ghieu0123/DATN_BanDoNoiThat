@@ -1,5 +1,6 @@
 package com.hieu.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -12,7 +13,7 @@ import com.hieu.form.shoporder.UpdatingShopOrderForm;
   
 
 public interface IShopOrderService {
-	public Page<ShopOrder> getAllShopOrders(String filter, Pageable pageable);
+	public Page<ShopOrder>  getAllShopOrders(Date minDate, Date maxDate, String filter, Pageable pageable);
 	
 	public Page<ShopOrder> getAllShopOrdersByUser(User user, String filter, Pageable pageable);
 

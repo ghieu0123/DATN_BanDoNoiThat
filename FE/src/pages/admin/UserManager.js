@@ -112,9 +112,6 @@ function UserManager(props) {
                 <option key="2" value="USER">
                   User
                 </option>
-                <option key="3" value="MANAGER">
-                  Manager
-                </option>
                 <option key="4" value="ADMIN">
                   Admin
                 </option>
@@ -173,7 +170,7 @@ function UserManager(props) {
               </thead>
               <tbody>
                 {userData.map((user, index) => (
-                  <tr key={user.id}>
+                  <tr key={index}>
                     <td>
                       <input
                         type="checkbox"
@@ -286,7 +283,7 @@ function UserManager(props) {
                 email: Yup.string().max(50, 'Must be less than 50 characters').required('Required'),
                 password: Yup.string(),
                 address: Yup.string().max(50, 'Must be less than 50 characters').required('Required'),
-                phone: Yup.number().required('Required'),
+                phone: Yup.string().max(25, 'Must be less than 50 characters').required('Required'),
                 firstName: Yup.string().max(50, 'Must be less than 50 characters').required('Required'),
                 lastName: Yup.string().required('Required'),
                 role: Yup.string().max(50, 'Must be less than 50 characters').required('Required'),
@@ -423,9 +420,6 @@ function UserManager(props) {
                               <option value="">Role</option>
                               <option key="2" value="USER">
                                 User
-                              </option>
-                              <option key="3" value="MANAGER">
-                                Manager
                               </option>
                               <option key="4" value="ADMIN">
                                 Admin

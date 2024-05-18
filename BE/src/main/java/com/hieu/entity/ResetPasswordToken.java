@@ -30,7 +30,7 @@ public class ResetPasswordToken implements Serializable {
 	private String token;
 
 	@OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
-	@JoinColumn(nullable = false, name = "user_id")
+	@JoinColumn(nullable = false, name = "userId")
 	private User user;
 
 	@Temporal(TemporalType.TIMESTAMP)

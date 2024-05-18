@@ -24,7 +24,7 @@ public class UserDTO {
 	
 	private String address;
 	
-	private Integer phone;
+	private String phone;
 	
 	private String firstName;
 	

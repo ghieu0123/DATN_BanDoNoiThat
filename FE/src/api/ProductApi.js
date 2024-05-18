@@ -65,6 +65,13 @@ const deleteProduct = (ids) => {
   return Api.delete(`${url}/${ids.toString()}`);
 };
 
+const uploadProfileImage = (id, image) => {
+  const body = {
+    image: image,
+  };
+  return Api.put(`${url}/upload/${id}`, body);
+};
+
 // export
-const api = { getAllProduct, createProduct, updateProduct, getProductById, deleteProduct };
+const api = { getAllProduct, createProduct, updateProduct, getProductById, deleteProduct, uploadProfileImage };
 export default api;

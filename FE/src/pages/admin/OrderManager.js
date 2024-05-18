@@ -32,9 +32,12 @@ function OrderManager(props) {
   // const [totalPage, setTotalPage] = useState();
   const [page, setPage] = useState(1);
   const [selectStatusValue, setSelectValue] = useState('');
+  const [selectMinDateValue, setMinDateValue] = useState('');
+  const [selectMaxDateValue, setMaxDateValue] = useState('');
   const [selectedIds, setSelectedIds] = useState([]);
   const [indexCheck, setIdexCheck] = useState(undefined);
   const [totalPrice1, setTotalPrice] = useState(0);
+  const [totalPrice2, setTotalPrice2] = useState(0);
 
   const navigate = useNavigate();
 
@@ -51,18 +54,23 @@ function OrderManager(props) {
       }
     });
   };
-  const getAllOrder = async (page, status) => {
+  const getAllOrder = async (page, status, minDate, maxDate) => {
     try {
-      const result = await ShopOrderApi.getAllShopOrders(page, 8, undefined, undefined, status);
+      const result = await ShopOrderApi.getAllShopOrders(page, 8, undefined, undefined, status, minDate, maxDate);
       const orders = result.content;
       // setTotalPage(result.totalPages);
-      total = result.totalPages;
       getOrder(orders);
-      // console.log(orderData);
-      // console.log(products);
     } catch (error) {
-      throw error;
+      console.log(error);
     }
+  };
+
+  const totalprice2 = () => {
+    let price = 0;
+    orderData.forEach((order) => {
+      if (order.orderStatus === 'PAY') price += order.totalPrice;
+    });
+    setTotalPrice2(price);
   };
 
   const totalprice = async () => {
@@ -78,7 +86,7 @@ function OrderManager(props) {
   const handleDeleteOrder = async (ids) => {
     try {
       const result = await ShopOrderApi.deleteByIds(ids);
-      getAllOrder(page, selectStatusValue);
+      getAllOrder(page, selectStatusValue, selectMinDateValue, selectMaxDateValue);
       totalprice();
       handleShowSuccessNotification('Xóa đơn hàng thành công');
     } catch (error) {
@@ -86,11 +94,23 @@ function OrderManager(props) {
     }
   };
 
+  const handleMinDateChange = (event) => {
+    setMinDateValue(event.target.value);
+  };
+
+  const handleMaxDateChange = (event) => {
+    setMaxDateValue(event.target.value);
+  };
+
   useEffect(() => {
     totalprice();
-    getAllOrder(page, selectStatusValue);
+    getAllOrder(page, selectStatusValue, selectMinDateValue, selectMaxDateValue);
     window.scrollTo(0, 0);
   }, [page]);
+
+  useEffect(() => {
+    totalprice2();
+  }, [orderData]);
 
   return (
     <>
@@ -105,6 +125,21 @@ function OrderManager(props) {
           </CardTitle>
           <div className="product-home-filter">
             <div className="product-home-type">
+              <input
+                onChange={handleMinDateChange}
+                type="date"
+                className="product-home-search-inp"
+                placeholder="Min order date"
+                style={{ width: '180px' }}
+              ></input>
+              -
+              <input
+                onChange={handleMaxDateChange}
+                type="date"
+                className="product-home-search-inp"
+                placeholder="Search"
+                style={{ width: '180px' }}
+              ></input>
               <select id="order-status-select">
                 <option key="0" value="">
                   Status
@@ -125,12 +160,13 @@ function OrderManager(props) {
                   const selectElement = document.getElementById('order-status-select');
                   const selectedValue = selectElement.value;
                   setSelectValue(selectedValue);
-                  getAllOrder(1, selectedValue);
-                  getAllOrder(1, selectedValue);
+                  getAllOrder(1, selectedValue, selectMinDateValue, selectMaxDateValue);
+                  getAllOrder(1, selectedValue, selectMinDateValue, selectMaxDateValue);
+                  totalprice2();
                   if (selectedValue != '') setPage(1);
                   if (selectedValue === '') setPage(1);
                   setSelectedIds([]);
-                  console.log(selectedValue);
+                  console.log(selectMinDateValue);
                 }}
               >
                 Lọc
@@ -191,7 +227,8 @@ function OrderManager(props) {
               className="order-manager-total-price"
               style={{ dislay: 'flex', justifyContent: 'right', width: '100%', marginTop: '50px' }}
             >
-              <p>Tổng lợi nhuận: {FormatPrice(totalPrice1)}</p>
+              <p>Doanh thu theo bảng: {FormatPrice(totalPrice2)}</p>
+              <p>Tổng lợi nhuận tất cả đon hàng: {FormatPrice(totalPrice1)}</p>
             </div>
           </div>
 

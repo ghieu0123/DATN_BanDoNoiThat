@@ -36,9 +36,8 @@ function Home(props) {
 
   const handleShowSuccessNotification = (message) => {
     toast.success(message, {
-      toastId: 'login-error', // Đặt một toastId cụ thể
       position: 'top-right',
-      autoClose: 3000,
+      autoClose: 500,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -69,10 +68,11 @@ function Home(props) {
 
   const handleAddProductToCart = async (productId) => {
     try {
-      if (cartData === null) {
+      const result = await ShoppingCartApi.getShoppingCartByDate();
+      // console.log(result);
+      if (result.id == null) {
         ShoppingCartApi.createCart(productId);
       } else {
-        const result = await ShoppingCartApi.getShoppingCartByDate();
         ShoppingCartApi.addProductToCart(result.id, productId);
       }
       handleShowSuccessNotification('Đã thêm vào giỏ hàng!');

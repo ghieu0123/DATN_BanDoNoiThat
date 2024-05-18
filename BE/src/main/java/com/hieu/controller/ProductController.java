@@ -121,5 +121,4 @@ public class ProductController {
 		service.deleteProduct(ids);
 		return new ResponseEntity<>("Delete Successfully!", HttpStatus.OK);
 	}
-
 }

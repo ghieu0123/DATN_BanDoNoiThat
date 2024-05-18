@@ -35,8 +35,8 @@ public class CreatingUserByAdminForm {
 	@NotBlank(message = "The address mustn't be null value")
 	private String address;
 	
-	@NotNull(message = "The phone number mustn't be null value")
-	private Integer phone;
+	@NotBlank(message = "The phone number mustn't be null value")
+	private String phone;
 	
 	@NotBlank(message = "The first name mustn't be null value")
 	private String firstName;
@@ -44,6 +44,6 @@ public class CreatingUserByAdminForm {
 	@NotBlank(message = "The last name mustn't be null value")
 	private String lastName;
 	
-	@Pattern(regexp = "ADMIN|MANAGER|USER", message = "The role must be Admin, Manager or User")
+	@Pattern(regexp = "ADMIN|USER", message = "The role must be Admin or User")
 	private String role;
 }

@@ -1,3 +1,12 @@
+@keyframes slideIn {
+  from {
+    right: -100%; /* Bắt đầu từ ngoài màn hình phía phải */
+  }
+  to {
+    right: 0; /* Kết thúc tại vị trí ban đầu */
+  }
+}
+
 .wrapper {
   position: fixed;
   width: 100%;
@@ -23,10 +32,10 @@
   width: 35%;
   top: 0;
   right: 0;
-  background-color: #ccc;
+  background-color: white;
+  // background-color: #ccc;
   z-index: 99;
-
-  // text-align: center;
+  animation: slideIn 0.4s ease-out; /* Áp dụng hoạt ảnh trượt vào */
 }
 
 .list-product-container {
@@ -49,9 +58,6 @@
   &-info {
     padding: 5px 15px;
     width: 70%;
-    // p {
-    //   font-size: 1rem;
-    // }
     &-name {
       font-size: 1.1rem;
       font-weight: 800;
@@ -94,10 +100,6 @@
       outline: none;
     }
   }
-
-  // &-handle-price {
-  //   display: flex;
-  // }
 }
 
 .btn-close {
@@ -123,7 +125,6 @@
 .action button {
   margin-left: 30px;
   margin-right: 30px;
-  // padding: 0 20px;
   margin-top: 15px;
   height: 54px;
   border: none;

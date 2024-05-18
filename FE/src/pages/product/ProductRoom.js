@@ -37,9 +37,8 @@ import Storage from '../../storage/Storage';
 
 const handleShowSuccessNotification = (message) => {
   toast.success(message, {
-    toastId: 'login-error', // Đặt một toastId cụ thể
     position: 'top-right',
-    autoClose: 3000,
+    autoClose: 500,
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: true,
@@ -75,16 +74,17 @@ function ProductHome(props) {
   // const categoryData = props.category;
 
   const isAuthenticated = () => {
-    console.log(Storage.getToken());
+    // console.log(Storage.getToken());
     return Storage.getToken() !== null && Storage.getToken() !== undefined;
   };
 
   const handleAddProductToCart = async (productId) => {
     try {
-      if (cartData === null) {
+      const result = await ShoppingCartApi.getShoppingCartByDate();
+      // console.log(result);
+      if (result.id == null) {
         ShoppingCartApi.createCart(productId);
       } else {
-        const result = await ShoppingCartApi.getShoppingCartByDate();
         ShoppingCartApi.addProductToCart(result.id, productId);
       }
       handleShowSuccessNotification('Đã thêm vào giỏ hàng!');
@@ -180,6 +180,12 @@ function ProductHome(props) {
                     <option key="2" value="Mức giá ↓">
                       Mức giá ↓
                     </option>
+                    <option key="1" value="Mới nhất ↑">
+                      Mới nhất ↑
+                    </option>
+                    <option key="2" value="Mới nhất ↓">
+                      Mới nhất ↓
+                    </option>
                   </select>
                   <select id="product-type-select">
                     <option key="0" value="">
@@ -211,6 +217,14 @@ function ProductHome(props) {
                           break;
                         case 'Mức giá ↓':
                           sortField = 'price';
+                          sortType = 'desc';
+                          break;
+                        case 'Mới nhất ↑':
+                          sortField = 'id';
+                          sortType = 'asc';
+                          break;
+                        case 'Mới nhất ↓':
+                          sortField = 'id';
                           sortType = 'desc';
                           break;
                         default:

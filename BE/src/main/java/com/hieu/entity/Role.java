@@ -5,7 +5,7 @@ package com.hieu.entity;
 public enum Role 
 //implements GrantedAuthority
 {
-	ADMIN, MANAGER, USER;
+	ADMIN, USER;
 
 //	@Override
 //	public String getAuthority() {

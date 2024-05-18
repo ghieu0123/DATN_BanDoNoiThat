@@ -66,7 +66,7 @@ function Header(props) {
                 navigate('/');
               }}
             >
-              Go to homepage
+              Về trang chủ
             </button>
           ) : (
             <>
@@ -77,7 +77,7 @@ function Header(props) {
                     navigate('/admin/user');
                   }}
                 >
-                  Go to Administration
+                  Tới trang quản lý
                 </button>
               )}
             </>
@@ -86,25 +86,25 @@ function Header(props) {
             <>
               <button className={cx('buttons')}>
                 <Link className={cx('btn-a')} to={'/sign-in'}>
-                  <FontAwesomeIcon icon={faRightToBracket} /> Sign in
+                  <FontAwesomeIcon icon={faRightToBracket} /> Đăng nhập
                 </Link>
               </button>
               <button className={cx('buttons')}>
                 <Link className={cx('btn-a')} to={'/sign-up'}>
-                  <FontAwesomeIcon icon={faUserPlus} /> Sign up
+                  <FontAwesomeIcon icon={faUserPlus} /> Đăng ký
                 </Link>
               </button>
             </>
           ) : (
             <>
               <button className={cx('buttons')} onClick={() => navigate('/products/order')}>
-                My Order
+                Đơn hàng
               </button>
               <button className={cx('buttons')} onClick={() => navigate('/profile')}>
                 <FontAwesomeIcon icon={faUser} /> {usernameInfo}
               </button>
               <button className={cx('buttons', 'sign-out-btn')} onClick={handleLogout}>
-                <FontAwesomeIcon icon={faRightFromBracket} /> Sign out
+                <FontAwesomeIcon icon={faRightFromBracket} /> Đăng xuất
               </button>
             </>
           )}

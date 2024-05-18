@@ -6,7 +6,7 @@ import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
 import { ToastContainer, toast } from 'react-toastify';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { selectProducts, selectPage, selectTotalSize, selectCategory } from '../../redux/selectors/ProductSelector';
+import { selectProducts, selectCategory } from '../../redux/selectors/ProductSelector';
 import { selectType } from '../../redux/selectors/TypeSelector';
 import { getListProductAction } from '../../redux/actions/ProductAction';
 import { getTypeAction } from '../../redux/actions/TypeAction';
@@ -35,9 +35,8 @@ import Storage from '../../storage/Storage';
 
 const handleShowSuccessNotification = (message) => {
   toast.success(message, {
-    toastId: 'login-error', // Đặt một toastId cụ thể
     position: 'top-right',
-    autoClose: 3000,
+    autoClose: 500,
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: true,
@@ -48,7 +47,7 @@ const handleShowSuccessNotification = (message) => {
 let total = 1;
 
 function ProductHome(props) {
-  const [totalPage, setTotalPage] = useState();
+  // const [totalPage, setTotalPage] = useState();
   const [page, setPage] = useState(1);
   const [selectValue, setSelectValue] = useState('');
   const [selectSortValue, setSelectSortValue] = useState('id');
@@ -73,16 +72,17 @@ function ProductHome(props) {
   // const categoryData = props.category;
 
   const isAuthenticated = () => {
-    console.log(Storage.getToken());
+    // console.log(Storage.getToken());
     return Storage.getToken() !== null && Storage.getToken() !== undefined;
   };
 
   const handleAddProductToCart = async (productId) => {
     try {
-      if (cartData === null) {
+      const result = await ShoppingCartApi.getShoppingCartByDate();
+      // console.log(result);
+      if (result.id == null) {
         ShoppingCartApi.createCart(productId);
       } else {
-        const result = await ShoppingCartApi.getShoppingCartByDate();
         ShoppingCartApi.addProductToCart(result.id, productId);
       }
       handleShowSuccessNotification('Đã thêm vào giỏ hàng!');
@@ -95,7 +95,7 @@ function ProductHome(props) {
     try {
       const result = await ProductApi.getAllProduct(page, undefined, sortField, sortType, searchData, undefined, type);
       const products = result.content;
-      setTotalPage(result.totalPages);
+      // setTotalPage(result.totalPages);
       total = result.totalPages;
       getListProduct(products);
       if (page > total) {
@@ -147,6 +147,12 @@ function ProductHome(props) {
                     <option key="2" value="Mức giá ↓">
                       Mức giá ↓
                     </option>
+                    <option key="1" value="Mới nhất ↑">
+                      Mới nhất ↑
+                    </option>
+                    <option key="2" value="Mới nhất ↓">
+                      Mới nhất ↓
+                    </option>
                   </select>
                   <select id="product-type-select">
                     <option key="0" value="">
@@ -180,6 +186,14 @@ function ProductHome(props) {
                           sortField = 'price';
                           sortType = 'desc';
                           break;
+                        case 'Mới nhất ↑':
+                          sortField = 'id';
+                          sortType = 'asc';
+                          break;
+                        case 'Mới nhất ↓':
+                          sortField = 'id';
+                          sortType = 'desc';
+                          break;
                         default:
                           sortField = 'id';
                           sortType = 'asc';
@@ -190,9 +204,9 @@ function ProductHome(props) {
                       setSelectValue(selectedValue);
                       getAllProduct(1, selectedValue, sortField, sortType);
                       getAllProduct(1, selectedValue, sortField, sortType);
-                      if (selectedValue != '') setPage(1);
+                      if (selectedValue !== '') setPage(1);
                       if (selectedValue === '') setPage(1);
-                      if (selectSortValue != 'id') setPage(1);
+                      if (selectSortValue !== 'id') setPage(1);
                       if (selectSortValue === 'id') setPage(1);
                       // console.log(selectedValue);
                     }}
@@ -249,7 +263,7 @@ function ProductHome(props) {
               {/* PAGE CHUYỂN TRANG */}
               <div className="product-home-pages">
                 <button
-                  onClick={() => setPage(page == 1 ? page : page - 1)}
+                  onClick={() => setPage(page === 1 ? page : page - 1)}
                   className="white-btn product-home-page-btn"
                 >
                   {'<'}
@@ -274,7 +288,7 @@ function ProductHome(props) {
                   return null;
                 })}
                 <button
-                  onClick={() => setPage(page == total ? page : page + 1)}
+                  onClick={() => setPage(page === total ? page : page + 1)}
                   className="white-btn product-home-page-btn"
                 >
                   {'>'}

@@ -3,7 +3,6 @@ import React, { Fragment, useState } from 'react';
 import { Button, Card, CardBody, FormGroup, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { FastField, Form, Formik } from 'formik';
 import { ReactstrapInput } from 'reactstrap-formik';
-import { TextInput } from '../../custom_/Text';
 import * as Yup from 'yup';
 import UserApi from '../../api/UserApi';
 import { useNavigate, Link } from 'react-router-dom';
@@ -49,8 +48,8 @@ const ResetPassword = (props) => {
     <React.Fragment>
       <ToastContainer />
       <div className="text-center mt-4">
-        <h1 className="h2">Reset password</h1>
-        <p className="lead">Enter your email to reset your password.</p>
+        <h1 className="h2">Đổi mật khẩu</h1>
+        <p className="lead">Nhập email để nhận thông tin đổi mật khẩu.</p>
       </div>
 
       <Formik
@@ -108,7 +107,7 @@ const ResetPassword = (props) => {
 
                   <div className="text-center mt-3">
                     <Button type="submit" className="white-btn" size="lg" disabled={isSubmitting}>
-                      Reset password
+                      Đổi mật khẩu
                     </Button>
                   </div>
                 </Form>
@@ -120,23 +119,23 @@ const ResetPassword = (props) => {
 
       <Modal isOpen={isOpenModal}>
         {/* header */}
-        <ModalHeader>You need to confirm reset password</ModalHeader>
+        <ModalHeader></ModalHeader>
 
         {/* body */}
         <ModalBody className="m-3">
           <p className="mb-0">
-            We have sent an email to <b>{email}</b>.
+            Chúng tôi đã gửi thông tin xác nhận tới <b>{email}</b>.
           </p>
-          <p className="mb-0">Please check your email to reset password</p>
+          <p className="mb-0"> Vui lòng kiểm tra!</p>
         </ModalBody>
 
         {/* footer */}
         <ModalFooter>
           <Button className="black-btn" onClick={resendEmailToResetPassword} disabled={isDisableResendButton}>
-            Resend
+            Gửi lại
           </Button>{' '}
           <Button className="white-btn" onClick={redirectToLogin}>
-            Login
+            Đăng nhập
           </Button>
         </ModalFooter>
       </Modal>

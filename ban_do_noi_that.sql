@@ -12,11 +12,11 @@ CREATE TABLE `User`(
     `email`			VARCHAR(50) NOT NULL UNIQUE CHECK (LENGTH(`email`) >= 6 AND LENGTH(`email`) <= 50),
     `password` 		VARCHAR(800) NOT NULL,
     `address`		VARCHAR(100) NOT NULL,
-    `phone`			INT UNSIGNED NOT NULL,
+    `phone`			VARCHAR(25) NOT NULL,
     `image`			TEXT,
     `firstName` 	NVARCHAR(50) NOT NULL,
 	`lastName` 		NVARCHAR(50) NOT NULL,
-    `role` 			ENUM('ADMIN','MANAGER','USER') DEFAULT 'USER',
+    `role` 			ENUM('ADMIN','USER') DEFAULT 'USER',
     `status`		BOOLEAN DEFAULT 0 -- 0: Not Active, 1: Active
 );
 
@@ -110,8 +110,9 @@ DROP TABLE IF EXISTS 	`Registration_User_Token`;
 CREATE TABLE IF NOT EXISTS `Registration_User_Token` ( 	
 	id 				INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 	`token`	 		CHAR(36) NOT NULL UNIQUE,
-	`user_id` 		SMALLINT UNSIGNED NOT NULL,
-	`expiryDate` 	DATETIME NOT NULL
+	`userId` 		INT NOT NULL,
+	`expiryDate` 	DATETIME NOT NULL,
+     FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE CASCADE
 );
 
 -- Create table Reset_Password_Token
@@ -119,19 +120,20 @@ DROP TABLE IF EXISTS 	`Reset_Password_Token`;
 CREATE TABLE IF NOT EXISTS `Reset_Password_Token` ( 	
 	id 				INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 	`token`	 		CHAR(36) NOT NULL UNIQUE,
-	`user_id` 		SMALLINT UNSIGNED NOT NULL,
-	`expiryDate` 	DATETIME NOT NULL
+	`userId` 		INT NOT NULL, 
+	`expiryDate` 	DATETIME NOT NULL,
+     FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE CASCADE
 );
 
 
 
 INSERT INTO `User` (`username`, `email`, `password`, `address`, `phone`, `firstName`, `lastName`, `role`, `status`)
 VALUES 
-('ghieu0123', 'ghieu0123@gmail.com', '$2a$10$W2neF9.6Agi6kAKVq8q3fec5dHW8KUA.b0VSIGdIZyUravfLpyIFi', 'tp.Bac Ninh', 123456789, 'Hieu', 'Nguyen', 'ADMIN', 1),
-('duchao', 'duchao@gmail.com', '$2a$10$W2neF9.6Agi6kAKVq8q3fec5dHW8KUA.b0VSIGdIZyUravfLpyIFi', 'Tien du, Bac Ninh', 987654321, 'Hao', 'Nguyen', 'MANAGER', 1),
-('phanphong', 'phanphong@gmail.com', '$2a$10$W2neF9.6Agi6kAKVq8q3fec5dHW8KUA.b0VSIGdIZyUravfLpyIFi', 'Lao Cai', 987654321, 'Phong', 'Phan', 'USER', 1),
-('sontung', 'sontung@gmail.com', '$2a$10$W2neF9.6Agi6kAKVq8q3fec5dHW8KUA.b0VSIGdIZyUravfLpyIFi', 'Luc Nam, Bac Giang', 123456789, 'tung', 'Nguyen', 'USER', 1),
-('vuhai', 'vuhai@gmail.com', '$2a$10$W2neF9.6Agi6kAKVq8q3fec5dHW8KUA.b0VSIGdIZyUravfLpyIFi', 'Tien du, Bac Ninh', 987654321, 'Hai', 'Vu', 'ADMIN', 1);
+('ghieu0123', 'ghieu0123@gmail.com', '$2a$10$W2neF9.6Agi6kAKVq8q3fec5dHW8KUA.b0VSIGdIZyUravfLpyIFi', 'tp.Bac Ninh', '123456789', 'Hieu', 'Nguyen', 'ADMIN', 1),
+('duchao', 'duchao@gmail.com', '$2a$10$W2neF9.6Agi6kAKVq8q3fec5dHW8KUA.b0VSIGdIZyUravfLpyIFi', 'Tien du, Bac Ninh', '987654321', 'Hao', 'Nguyen', 'ADMIN', 1),
+('phanphong', 'phanphong@gmail.com', '$2a$10$W2neF9.6Agi6kAKVq8q3fec5dHW8KUA.b0VSIGdIZyUravfLpyIFi', 'Lao Cai', '987654321', 'Phong', 'Phan', 'USER', 1),
+('sontung', 'sontung@gmail.com', '$2a$10$W2neF9.6Agi6kAKVq8q3fec5dHW8KUA.b0VSIGdIZyUravfLpyIFi', 'Luc Nam, Bac Giang', '123456789', 'tung', 'Nguyen', 'USER', 1),
+('vuhai', 'vuhai@gmail.com', '$2a$10$W2neF9.6Agi6kAKVq8q3fec5dHW8KUA.b0VSIGdIZyUravfLpyIFi', 'Tien du, Bac Ninh', '987654321', 'Hai', 'Vu', 'ADMIN', 1);
 
 INSERT INTO `Category` (`categoryName`)
 VALUES 

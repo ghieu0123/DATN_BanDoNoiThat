@@ -2,7 +2,6 @@ import React from 'react';
 
 import { Button, Card, CardBody, FormGroup } from 'reactstrap';
 import { FastField, Form, Formik } from 'formik';
-import { TextInput } from '../../custom_/Text';
 import * as Yup from 'yup';
 import UserApi from '../../api/UserApi';
 import { useParams } from 'react-router-dom';
@@ -40,7 +39,7 @@ const NewPassword = (props) => {
     <React.Fragment>
       <ToastContainer />
       <div className="text-center mt-4">
-        <h1 className="h2">Reset password</h1>
+        <h1 className="h2">Đổi mật khẩu</h1>
         <p className="lead">Enter your new password.</p>
       </div>
 
@@ -106,8 +105,8 @@ const NewPassword = (props) => {
                   </FormGroup>
 
                   <div className="text-center mt-3">
-                    <Button type="submit" className='white-btn' size="lg" disabled={isSubmitting}>
-                      Reset password
+                    <Button type="submit" className="white-btn" size="lg" disabled={isSubmitting}>
+                      Đổi mật khẩu
                     </Button>
                   </div>
                 </Form>

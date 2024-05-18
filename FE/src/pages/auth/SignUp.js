@@ -3,10 +3,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import { ReactstrapInput } from 'reactstrap-formik';
 import { Button, Card, CardBody, FormGroup, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { FastField, Form, Formik, Field, ErrorMessage } from 'formik';
-import { TextInput } from '../../custom_/Text';
 import * as Yup from 'yup';
 import UserApi from '../../api/UserApi';
-import { withRouter } from 'react-router-dom';
 import NotifiBox4 from '../../components/component/box/NotifiBox4';
 const SignUp = (props) => {
   const [isOpenModal, setOpenModal] = useState(false);
@@ -34,8 +32,8 @@ const SignUp = (props) => {
   return (
     <>
       <div className="text-center mt-4">
-        <h1 className="h2">WELLCOME!!</h1>
-        <p className="lead">Let start creating account </p>
+        <h1 className="h2">Đăng ký tài khoản</h1>
+        <p className="lead">Cá nhân hóa trải nghiệm mua hàng bằng cách tạo tài khoản của riêng mình</p>
       </div>
 
       <Formik
@@ -117,7 +115,7 @@ const SignUp = (props) => {
         validateOnBlur={false}
       >
         {({ isSubmitting }) => (
-          <Card>
+          <Card style={{ boxShadow: 'none' }}>
             <CardBody className="auth">
               <div className="m-sm-4">
                 <Form>
@@ -220,20 +218,20 @@ const SignUp = (props) => {
                   <div className="text-center mt-3">
                     {/* <Link to="/sign-in" className="signup-link"> */}
                     <span className="signup-text">
-                      Already have account? <Link to={'/sign-in'}>Sign in!</Link>
+                      Đã có tài khoản? <Link to={'/sign-in'}>Đăng nhập!</Link>
                     </span>
                     {/* </Link> */}
                   </div>
 
                   <div className="text-center mt-3">
                     <Button
-                      className="white-btn"
+                      className="black-btn"
                       type="submit"
                       color="primary"
                       size="lg"
                       // disabled={isSubmitting}
                     >
-                      Sign Up
+                      Đăng ký
                     </Button>
                   </div>
                 </Form>
@@ -245,23 +243,23 @@ const SignUp = (props) => {
 
       <Modal isOpen={isOpenModal}>
         {/* header */}
-        <ModalHeader>You need to confirm your account</ModalHeader>
+        <ModalHeader></ModalHeader>
 
         {/* body */}
         <ModalBody className="m-3">
           <p className="mb-0">
-            We have sent an email to <b>{email}</b>.
+            Chúng tôi đã gửi một địa chỉ kích hoạt tài khoản tới email <b>{email}</b> của bạn!.
           </p>
-          <p className="mb-0">Please check your email to active account</p>
+          <p className="mb-0">Xin vui lòng kiểm tra hộp thư email để kích hoạt tài khoản!</p>
         </ModalBody>
 
         {/* footer */}
         <ModalFooter>
           <Button className="black-btn" onClick={resendEmailToActiveAccount} disabled={isDisableResendButton}>
-            Resend
+            Gửi lại
           </Button>{' '}
           <Button className="white-btn" onClick={redirectToLogin}>
-            Login
+            Đăng nhập
           </Button>
         </ModalFooter>
       </Modal>

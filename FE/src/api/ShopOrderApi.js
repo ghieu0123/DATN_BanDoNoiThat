@@ -2,16 +2,22 @@ import Api from './Api';
 
 const url = '/shoporders';
 
-const getAllShopOrders = (page = 1, size = 10, sortField = 'id', sortType = 'desc', filter) => {
+const getAllShopOrders = (page = 1, size = 10, sortField = 'id', sortType = 'desc', filter, minDate, maxDate) => {
   const parameters = {
     page,
     size,
     sort: `${sortField},${sortType}`,
   };
-  if (filter) {
-    parameters.filter = filter;
-  }
-  return Api.get(`${url}`, { params: parameters });
+  // if (filter) {
+  //   parameters.filter = filter;
+  // }
+
+  // parameters.minDate = minDate;
+
+  // if (maxDate) {
+  //   parameters.maxDate = maxDate;
+  // }
+  return Api.get(`${url}?filter=${filter}&minDate=${minDate}&maxDate=${maxDate}`, { params: parameters });
 };
 
 const getAllShopOrderByUser = (page = 1, size = 5, sortField = 'id', sortType = 'desc', filter) => {

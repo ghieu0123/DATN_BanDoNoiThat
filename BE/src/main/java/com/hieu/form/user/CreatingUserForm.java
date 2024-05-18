@@ -8,7 +8,6 @@ import com.hieu.validation.user.UsernameNotExists;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -33,8 +32,9 @@ public class CreatingUserForm {
 	@Length(max = 50, message = "The email's length is max 100 characters")
 	private String address;
 	
-	@NotNull(message = "The phone mustn't be null value")
-	private Integer phone;
+	@NotBlank(message = "The phone mustn't be null value")
+	@Length(max = 25, message = "The phone's length is max 100 characters")
+	private String phone;
 	
 	@NotBlank(message = "The password mustn't be null value")
 	private String password;

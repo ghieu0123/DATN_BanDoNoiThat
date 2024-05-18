@@ -13,7 +13,7 @@ public class UpdatingUserForm {
 	@Length(min = 6, message = "The email's length is min 6 characters")
 	protected String address;
 	
-	protected Integer phone;
+	protected String phone;
 
 	protected String firstName;
 

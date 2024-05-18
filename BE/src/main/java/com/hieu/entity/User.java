@@ -43,8 +43,8 @@ public class User implements Serializable {
 	@Column(name = "`address`", length = 100, nullable = false)
 	private String address;
 	
-	@Column(name = "`phone`", nullable = false)
-	private Integer phone;
+	@Column(name = "`phone`", length = 50, nullable = false)
+	private String phone;
 	
 	@Column(name = "`image`")
 	private String image;
@@ -78,7 +78,7 @@ public class User implements Serializable {
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private List<ShopOrder> shopOrders;
 	
-	public User(String username, String email, String password, String address, Integer phone, String firstName, String lastName) {
+	public User(String username, String email, String password, String address, String phone, String firstName, String lastName) {
 		super();
 		this.username = username;
 		this.email = email;

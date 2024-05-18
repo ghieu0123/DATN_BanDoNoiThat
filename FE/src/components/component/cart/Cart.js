@@ -22,6 +22,7 @@ function Cart({ onClick, ...props }) {
   const [isOpenDeleteAll, setOpenDeleteAll] = useState(false);
   const [idItemCart, setIdItemCart] = useState();
   const [cartId, setCartId] = useState();
+  const [isVisible, setIsVisible] = useState(false);
 
   const getCartItem = props.getCartItemAction;
   const cartData = props.cartItems;
@@ -35,6 +36,7 @@ function Cart({ onClick, ...props }) {
       const result = await ShoppingCartApi.getShoppingCartByDate();
       getCartItem(result.shoppingCartItems);
       setCartId(result.id);
+      setIsVisible(true);
     } catch (error) {
       console.log(error);
     }
@@ -87,9 +89,9 @@ function Cart({ onClick, ...props }) {
   return (
     <>
       <div className={cx('wrapper')}>
-        <div className={cx('content')}>
+        <div className={cx('content', { visible: isVisible })}>
           <div className="text-center">
-            <h1>CART</h1>
+            <h1>GIỎ HÀNG</h1>
           </div>
           <div className={cx('list-product-container')}>
             <div className={cx('list-product')}>

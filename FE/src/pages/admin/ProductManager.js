@@ -1,8 +1,9 @@
 import { useEffect, useState, Fragment } from 'react';
 import ProductApi from '../../api/ProductApi';
+import UploadApi from '../../api/UploadApi';
 import TypeApi from '../../api/TypeApi';
 import CategoryApi from '../../api/CategoryApi';
-import { Link, useNavigate } from 'react-router-dom';
+import { Await, Link, useNavigate } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { selectProducts } from '../../redux/selectors/ProductSelector';
 import { selectType } from '../../redux/selectors/TypeSelector';
@@ -25,7 +26,7 @@ const handleShowSuccessNotification = (message) => {
   toast.success(message, {
     toastId: 'login-error', // Đặt một toastId cụ thể
     position: 'top-right',
-    autoClose: 3000,
+    autoClose: 1000,
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: true,
@@ -44,6 +45,20 @@ function UserManager(props) {
   const [selectSearchValue, setSearchValue] = useState('');
   const [isShow, setShow] = useState(false);
   const [indexCheck, setIdexCheck] = useState(undefined);
+  const [imageUrl, setImageUrl] = useState('');
+  const [image, setImage] = useState();
+  const [count, setCount] = useState(0);
+  // const [productCreateInfo, setProductCreate] = useState({
+  //   name: '',
+  //   collection: '',
+  //   size: '',
+  //   description: '',
+  //   material: '',
+  //   price: '',
+  //   image: '',
+  //   type: '',
+  //   category: '',
+  // });
 
   const navigate = useNavigate();
 
@@ -75,11 +90,13 @@ function UserManager(props) {
       // setTotalPage(result.totalPages);
       total = result.totalPages;
       getListProduct(products);
-      // console.log(products);
+      console.log(products);
     } catch (error) {
-      throw error;
+      console.log(error);
     }
   };
+
+  const setProductImageData = async () => await ProductApi.uploadProfileImage(productData[indexCheck].id, imageUrl);
 
   const handleChange = (event) => {
     setSearchValue(event.target.value);
@@ -107,6 +124,69 @@ function UserManager(props) {
       const result = await ProductApi.deleteProduct(ids);
       getAllProduct(page, selectSearchValue, selectCategoryValue, selectTypeValue);
       handleShowSuccessNotification('Xóa sản phẩm thành công');
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleImageUpload = (event) => {
+    setCount(0);
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      setImage(file);
+      // setImageUrl(reader.result);
+    };
+
+    if (file && file.type.match('image.*')) {
+      reader.readAsDataURL(file);
+    } else {
+      setImage(null);
+    }
+    setCount(1);
+  };
+
+  const handleImage = async () => {
+    setCount(count + 1);
+    console.log(count);
+    try {
+      const uploadResult = await UploadApi.upload(image, 'product_image');
+      console.log(uploadResult);
+      setImageUrl(uploadResult.url);
+      if (indexCheck === undefined) {
+        // setImageUrl(uploadResult.url);
+        handleShowSuccessNotification('Đã tải ảnh lên! Vui lòng ấn lưu ảnh!');
+
+        // console.log(imageUrl);
+        // const result = await ProductApi.uploadProfileImage(userInfo.userId, uploadResult.url);
+        // console.log(uploadResult.url);
+      } else {
+        const image_public_id = productData[indexCheck].image;
+        if (image_public_id.includes('cloudinary')) {
+          const imageName = image_public_id.split('/').pop().split('.')[0];
+          await UploadApi.deleteProductImage(imageName);
+
+          // const result = await ProductApi.uploadProfileImage(productData[indexCheck].id, uploadResult.url);
+          // getAllProduct(page, selectSearchValue, selectCategoryValue, selectTypeValue);
+          handleShowSuccessNotification('Đã tải ảnh lên! Vui lòng ấn lưu ảnh!');
+          // setShow(false);
+          // setIdexCheck(undefined);
+          // setImageUrl();
+          // setImage();
+        } else {
+          // setImageUrl(uploadResult.url);
+          // const result = await ProductApi.uploadProfileImage(productData[indexCheck].id, uploadResult.url);
+          // getAllProduct(page, selectSearchValue, selectCategoryValue, selectTypeValue);
+          handleShowSuccessNotification('Đã tải ảnh lên! Vui lòng ấn lưu ảnh!');
+          // setIdexCheck(undefined);
+          // setImageUrl();
+          // setImage();
+          // setShow(false);
+        }
+        setCount(3);
+        console.log(count);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -175,8 +255,8 @@ function UserManager(props) {
                   if (selectedValue === '') setPage(1);
                   if (selectedValue2 === '') setPage(1);
                   setSelectedIds([]);
-                  console.log(selectedValue);
-                  console.log(selectedValue2);
+                  // console.log(selectedValue);
+                  // console.log(selectedValue2);
                 }}
               >
                 Lọc
@@ -192,12 +272,18 @@ function UserManager(props) {
               className="manager-filter-btn product-manager-delete-btn"
               onClick={() => {
                 if (selectedIds.length > 0) handleDeleteProduct(selectedIds);
-                console.log(selectedIds);
+                // console.log(selectedIds);
               }}
             >
               <FontAwesomeIcon icon={faTrash} />
             </button>
-            <button onClick={() => setShow(true)} className="manager-filter-btn product-manager-add-btn">
+            <button
+              onClick={() => {
+                setImageUrl('');
+                setShow(true);
+              }}
+              className="manager-filter-btn product-manager-add-btn"
+            >
               <FontAwesomeIcon icon={faPlus} />
             </button>
             <table className="product-table">
@@ -316,7 +402,7 @@ function UserManager(props) {
         <Fragment />
       ) : (
         <div className="product-manager-box-main">
-          <div className="product-manager-box">
+          <div className="product-manager-box" style={{ width: 'auto' }}>
             <div className="text-center mt-4 product-manager-title-box">
               <h1 className="h2">{indexCheck === undefined ? 'Create product' : 'Update product'}</h1>
               {/* <p className="lead">Start update account.</p> */}
@@ -359,7 +445,7 @@ function UserManager(props) {
                 try {
                   handleShowSuccessNotification('Thành công');
                   // call api
-                  const productInfo = {
+                  let productUpdateInfo = {
                     name: values.name,
                     collection: values.collection,
                     size: values.size,
@@ -371,12 +457,15 @@ function UserManager(props) {
                     category: values.category,
                   };
                   indexCheck === undefined
-                    ? await ProductApi.createProduct(productInfo)
-                    : await ProductApi.updateProduct(productData[indexCheck].id, productInfo);
+                    ? await ProductApi.createProduct(productUpdateInfo)
+                    : await ProductApi.updateProduct(productData[indexCheck].id, productUpdateInfo);
                   getAllProduct(page, selectSearchValue, selectCategoryValue, selectTypeValue);
                   // setUserInfo(result);
-                  setShow(false);
                   setIdexCheck(undefined);
+                  setImage();
+                  setImageUrl();
+                  setCount(0);
+                  setShow(false);
                   // console.log(productInfo);
                 } catch (error) {
                   console.log(error);
@@ -385,137 +474,189 @@ function UserManager(props) {
               validateOnChange={false}
               validateOnBlur={false}
             >
-              {({ isSubmitting }) => (
-                <Card>
-                  <CardBody>
-                    <div className="m-sm-4">
-                      <Form>
-                        <div className="product-manager-box-content">
-                          <FormGroup>
-                            <FastField
-                              label="Product name"
-                              type="text"
-                              bsSize="lg"
-                              name="name"
-                              placeholder="Enter product name"
-                              component={ReactstrapInput}
-                            />
-                          </FormGroup>
-
-                          <FormGroup>
-                            <FastField
-                              label="Collection"
-                              type="text"
-                              bsSize="lg"
-                              name="collection"
-                              placeholder="Enter collection"
-                              component={ReactstrapInput}
-                            />
-                          </FormGroup>
-
-                          <FormGroup>
-                            <FastField
-                              label="Size"
-                              type="text"
-                              bsSize="lg"
-                              name="size"
-                              placeholder="Enter size"
-                              component={ReactstrapInput}
-                            />
-                          </FormGroup>
-
-                          <FormGroup>
-                            <FastField
-                              label="Description"
-                              type="text"
-                              bsSize="lg"
-                              name="description"
-                              placeholder="Enter your description"
-                              component={ReactstrapInput}
-                            />
-                          </FormGroup>
-
-                          <FormGroup>
-                            <FastField
-                              label="Material"
-                              type="text"
-                              bsSize="lg"
-                              name="material"
-                              placeholder="Enter your material"
-                              component={ReactstrapInput}
-                            />
-                          </FormGroup>
-
-                          <FormGroup>
-                            <FastField
-                              label="Price"
-                              type="number"
-                              bsSize="lg"
-                              name="price"
-                              placeholder="Enter your price"
-                              component={ReactstrapInput}
-                            />
-                          </FormGroup>
-
-                          <FormGroup>
-                            <FastField
-                              label="Image url"
-                              type="text"
-                              bsSize="lg"
-                              name="image"
-                              placeholder="Enter your image link"
-                              component={ReactstrapInput}
-                            />
-                          </FormGroup>
-
-                          <FormGroup>
-                            <Label for="type">Type </Label>
-                            <Field as="select" id="type" name="type">
-                              <option value="">Type</option>
-                              {typeData.map((item) => (
-                                <option key={item.id} value={item.typeName}>
-                                  {item.typeName}
-                                </option>
-                              ))}
-                            </Field>
-                          </FormGroup>
-
-                          <FormGroup>
-                            <Label for="category">Category </Label>
-                            <Field as="select" id="category" name="category">
-                              <option value="">Category</option>
-                              {categoryData.map((item) => (
-                                <option key={item.id} value={item.categoryName}>
-                                  {item.categoryName}
-                                </option>
-                              ))}
-                            </Field>
-                          </FormGroup>
-                        </div>
-                        <div className="text-center product-manager-btn">
-                          <button
-                            className="black-btn user-update-close-btn"
-                            onClick={() => {
-                              setShow(false);
-                              setIdexCheck(undefined);
-                            }}
-                          >
-                            Close
-                          </button>
-                          <Button
-                            className="white-btn"
-                            type="submit"
-                            color="primary"
-                            size="lg"
-                            // disabled={isSubmitting}
-                          >
-                            {indexCheck === undefined ? 'Create' : 'Update'}
-                          </Button>
-                        </div>
-                      </Form>
+              {({ isSubmitting, setFieldValue }) => (
+                <div className="product-manager-body">
+                  <div className="product-manager-upload">
+                    <p>UPLOAD IMAGE</p>
+                    <div className="user-upload-box">
+                      <input type="file" accept="image/*" onChange={handleImageUpload} />
+                      {imageUrl && <img style={{ textAlign: 'left' }} src={imageUrl} alt="Uploaded" />}
                     </div>
-                  </CardBody>
-                </Card>
+                    {count > 0 ? (
+                      count === 1 ? (
+                        <p>Vui lòng ấn 'Upload' để tải ảnh sản phẩm!</p>
+                      ) : count === 2 ? (
+                        <p>Đang tải...</p>
+                      ) : count === 3 ? (
+                        <p>Vui lòng ấn 'Save' để lưu ảnh vào sản phẩm!</p>
+                      ) : (
+                        <p>Lưu thành công!</p>
+                      )
+                    ) : (
+                      <></>
+                    )}
+                    {count > 0 ? (
+                      <button
+                        onClick={() => {
+                          if (count === 1) handleImage();
+                          if (count === 3) {
+                            setProductImageData();
+                            setCount(count + 1);
+                          }
+                          if (imageUrl != null) setFieldValue('image', imageUrl);
+
+                          // if (count === 4) setCount(count + 1);
+                          // if (count === 2) handleShowSuccessNotification('Lưu ảnh sản phẩm thành công!');
+                        }}
+                        className="black-btn"
+                      >
+                        {count === 1 ? 'Upload image' : 'Save image'}
+                      </button>
+                    ) : (
+                      <></>
+                    )}
+                  </div>
+                  <Card>
+                    <CardBody>
+                      <div className="m-sm-4">
+                        <Form>
+                          <div className="product-manager-box-content">
+                            <FormGroup>
+                              <FastField
+                                label="Product name"
+                                type="text"
+                                bsSize="lg"
+                                name="name"
+                                placeholder="Enter product name"
+                                component={ReactstrapInput}
+                              />
+                            </FormGroup>
+
+                            <FormGroup>
+                              <FastField
+                                label="Collection"
+                                type="text"
+                                bsSize="lg"
+                                name="collection"
+                                placeholder="Enter collection"
+                                component={ReactstrapInput}
+                              />
+                            </FormGroup>
+
+                            <FormGroup>
+                              <FastField
+                                label="Size"
+                                type="text"
+                                bsSize="lg"
+                                name="size"
+                                placeholder="Enter size"
+                                component={ReactstrapInput}
+                              />
+                            </FormGroup>
+
+                            <FormGroup>
+                              <FastField
+                                label="Description"
+                                type="text"
+                                bsSize="lg"
+                                name="description"
+                                placeholder="Enter your description"
+                                component={ReactstrapInput}
+                              />
+                            </FormGroup>
+
+                            <FormGroup>
+                              <FastField
+                                label="Material"
+                                type="text"
+                                bsSize="lg"
+                                name="material"
+                                placeholder="Enter your material"
+                                component={ReactstrapInput}
+                              />
+                            </FormGroup>
+
+                            <FormGroup>
+                              <FastField
+                                label="Price"
+                                type="number"
+                                bsSize="lg"
+                                name="price"
+                                placeholder="Enter your price"
+                                component={ReactstrapInput}
+                              />
+                            </FormGroup>
+
+                            {indexCheck != undefined ? (
+                              <FormGroup>
+                                <FastField
+                                  label="Image url"
+                                  type="text"
+                                  bsSize="lg"
+                                  name="image"
+                                  placeholder="Press Sava button or Enter your image link"
+                                  component={ReactstrapInput}
+                                />
+                              </FormGroup>
+                            ) : (
+                              <></>
+                            )}
+
+                            <FormGroup>
+                              <Label for="type">Type </Label>
+                              <Field as="select" id="type" name="type">
+                                <option value="">Type</option>
+                                {typeData.map((item) => (
+                                  <option key={item.id} value={item.typeName}>
+                                    {item.typeName}
+                                  </option>
+                                ))}
+                              </Field>
+                            </FormGroup>
+
+                            <FormGroup>
+                              <Label for="category">Category </Label>
+                              <Field as="select" id="category" name="category">
+                                <option value="">Category</option>
+                                {categoryData.map((item) => (
+                                  <option key={item.id} value={item.categoryName}>
+                                    {item.categoryName}
+                                  </option>
+                                ))}
+                              </Field>
+                            </FormGroup>
+                          </div>
+                          <div className="text-center product-manager-btn">
+                            <button
+                              className="black-btn user-update-close-btn"
+                              onClick={() => {
+                                setShow(false);
+                                setIdexCheck(undefined);
+                                // if (indexCheck === undefined) {
+                                setImageUrl();
+                                setImage();
+                                setCount(0);
+                                getAllProduct(page, selectSearchValue, selectCategoryValue, selectTypeValue);
+                                // }
+                              }}
+                            >
+                              Close
+                            </button>
+                            <Button
+                              className="white-btn"
+                              type="submit"
+                              color="primary"
+                              size="lg"
+                              // disabled={isSubmitting}
+                            >
+                              {indexCheck === undefined ? 'Create' : 'Update'}
+                            </Button>
+                          </div>
+                        </Form>
+                      </div>
+                    </CardBody>
+                  </Card>
+                </div>
               )}
             </Formik>
           </div>

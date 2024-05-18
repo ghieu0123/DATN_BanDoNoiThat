@@ -1,4 +1,3 @@
-import RoutesConfig from './config/routes';
 //HOC
 import withAuth from '../HOC/withAuth';
 import withAdmin from '../HOC/withAdmin';
@@ -22,17 +21,17 @@ import ProductInfo from '../pages/product/ProductInfo';
 //Order
 import Purchase from '../pages/Order/Purchase';
 import Order from '../pages/Order/Order';
+import PurchaseVNPay from '../pages/Order/PurchaseVNPay';
 //admin
 import ProductManager from '../pages/admin/ProductManager';
 import UserManager from '../pages/admin/UserManager';
 import OrderManager from '../pages/admin/OrderManager';
 import TypeManager from '../pages/admin/TypeManager';
 import CategoryManager from '../pages/admin/CategoryManager';
-import PurchaseVNPay from '../pages/Order/PurchaseVNPay';
 
 //public router
 const publicRouter = [
-  { path: RoutesConfig.home, component: Home },
+  { path: '/', component: Home },
   //auth
   { path: '/sign-in', component: SignIn, layout: HeaderOnly },
   { path: '/sign-up', component: SignUp, layout: HeaderOnly },
@@ -43,9 +42,10 @@ const publicRouter = [
   //product
   { path: '/products/category', component: ProductRoom },
   { path: '/products/search', component: ProductSearch },
-  { path: RoutesConfig.products, component: ProductHome },
-  { path: RoutesConfig.productInfo, component: ProductInfo },
-  { path: RoutesConfig.purchase, component: withAuth(Purchase), layout: ContentOnly },
+  { path: '/products', component: ProductHome },
+  { path: '/products/productinfo/:id', component: ProductInfo },
+  //Order
+  { path: '/purchase', component: withAuth(Purchase), layout: ContentOnly },
   { path: '/products/order/purchaseInfo', component: withAuth(PurchaseVNPay), layout: ContentOnly },
   { path: '/products/order', component: withAuth(Order), layout: HeaderOnly },
   //admin
@@ -56,41 +56,4 @@ const publicRouter = [
   { path: '/admin/category', component: withAuth(withAdmin(CategoryManager)), layout: Admin },
 ];
 
-const privateRouter = [];
-
-const authRoutes = {
-  path: '/auth',
-  name: 'Auth',
-  badgeColor: 'secondary',
-  badgeText: 'Special',
-  children: [
-    {
-      path: '/sign-in',
-      name: 'Sign In',
-      component: SignIn,
-    },
-    {
-      path: '/sign-up',
-      name: 'Sign Up',
-      component: SignUp,
-    },
-    {
-      path: '/reset-password',
-      name: 'Reset Password',
-      component: ResetPassword,
-    },
-    {
-      path: '/new-password/:token',
-      name: 'New Password',
-      component: NewPassword,
-    },
-    {
-      path: '/404',
-      name: '404 Page',
-      component: Page404,
-    },
-  ],
-};
-
-// Auth specific routes
-export { authRoutes, publicRouter, privateRouter };
+export { publicRouter };

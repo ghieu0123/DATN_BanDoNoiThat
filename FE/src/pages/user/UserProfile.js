@@ -66,7 +66,7 @@ const UserProfile = (props) => {
   const handleUploadImage = async () => {
     try {
       const uploadResult = await UploadApi.upload(image, 'user_image');
-      if (userInfo.image === null) {
+      if (userInfo.image === null || !userInfo.image.includes('cloudinary')) {
         const result = await UserApi.uploadProfileImage(userInfo.userId, uploadResult.url);
         // console.log(uploadResult.url);
       } else {
@@ -77,6 +77,7 @@ const UserProfile = (props) => {
         // console.log(result);
       }
       userResult();
+      handleShowErrorNotification();
     } catch (error) {
       console.log(error);
     }
@@ -112,7 +113,7 @@ const UserProfile = (props) => {
             </div>
           )}
           <button className="black-btn user-update-image-btn" onClick={() => setShow2(true)}>
-            Upload profile image
+            Tải ảnh hồ sơ
           </button>
           <p>Xin chào! {userInfo.username}</p>
         </div>
@@ -152,7 +153,7 @@ const UserProfile = (props) => {
                 navigate('/reset-password');
               }}
             >
-              Reset Password
+              Đổi mật khẩu
             </button>
             <button
               className="white-btn user-update-public-passwordbtn"
@@ -160,7 +161,7 @@ const UserProfile = (props) => {
                 setShow(true);
               }}
             >
-              Update profile
+              Thay đổi thông tin
             </button>
           </div>
         </div>
@@ -171,7 +172,7 @@ const UserProfile = (props) => {
           <div className="user-update-box-main">
             <div className="user-update-box">
               <div className="text-center mt-4">
-                <h1 className="h2">Update Your Profile</h1>
+                <h1 className="h2">Thay đổi thông tin</h1>
                 <p className="lead">Start update account.</p>
               </div>
 
@@ -188,7 +189,7 @@ const UserProfile = (props) => {
                   lastName: Yup.string().max(50, 'Must be less than 50 characters').required('Required'),
 
                   address: Yup.string().max(50, 'Must be less than 50 characters').required('Required'),
-                  phone: Yup.number().required('Required'),
+                  phone: Yup.string().max(25, 'Must be less than 25 characters').required('Required'),
                 })}
                 onSubmit={async (values) => {
                   try {
@@ -253,7 +254,7 @@ const UserProfile = (props) => {
                           <FormGroup>
                             <FastField
                               label="Phone"
-                              type="number"
+                              type="text"
                               bsSize="lg"
                               name="phone"
                               placeholder="Enter your phone"
@@ -268,7 +269,7 @@ const UserProfile = (props) => {
                                 setShow(false);
                               }}
                             >
-                              Close
+                              Thoát
                             </button>
                             <Button
                               className="white-btn"
@@ -277,7 +278,7 @@ const UserProfile = (props) => {
                               size="lg"
                               // disabled={isSubmitting}
                             >
-                              Update
+                              Cập nhật
                             </Button>
                           </div>
                         </Form>
@@ -295,16 +296,17 @@ const UserProfile = (props) => {
           <NotifiBox3
             isbtn1={true}
             isbtn2={true}
-            btnname1={'Save'}
-            btnname2={'Close'}
+            btnname1={'Lưu'}
+            btnname2={'Thoát'}
             action1={() => {
               if (image === null || image === '') {
-                setShow(false);
+                setShow2(false);
+              } else {
+                handleUploadImage();
+                setShow2(false);
+                setImageUrl();
+                setImage();
               }
-              handleUploadImage();
-              setShow2(false);
-              setImageUrl();
-              setImage();
             }}
             action2={() => {
               setShow2(false);

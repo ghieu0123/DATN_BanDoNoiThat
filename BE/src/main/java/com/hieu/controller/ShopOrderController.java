@@ -1,5 +1,6 @@
 package com.hieu.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -49,8 +51,10 @@ public class ShopOrderController {
 	@GetMapping()
 	public ResponseEntity<?> getAllShopOrder(
 			@PageableDefault(sort = { "id" }, direction = Sort.Direction.ASC) Pageable pageable,
-			@RequestParam(value = "filter", required = false) String filter) {
-		Page<ShopOrder> entityPages = service.getAllShopOrders(filter, pageable);
+			@RequestParam(value = "filter", required = false) String filter, 
+			@RequestParam(value = "minDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd")Date minOrderDate,
+			@RequestParam(value = "maxDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd")Date maxOrderDate) {
+		Page<ShopOrder> entityPages = service.getAllShopOrders(minOrderDate, maxOrderDate, filter, pageable);
 
 		List<ShopOrderDTO> dtos = modelMapper.map(entityPages.getContent(), new TypeToken<List<ShopOrderDTO>>() {
 		}.getType());

@@ -4,14 +4,11 @@ import '../../css/class.css';
 import { Button, Card, CardBody, FormGroup, CustomInput, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { ReactstrapInput } from 'reactstrap-formik';
 import { FastField, Form, Formik, Field, ErrorMessage } from 'formik';
-import { TextInput } from '../../custom_/Text';
 import * as Yup from 'yup';
 import LoginApi from '../../api/LoginApi';
-import avatar from '../../assets/img/avatars/avatar-vip-pro.jpg';
 import logo from '../../assets/logo/logo.jpg';
 import Storage from '../../storage/Storage';
 import UserApi from '../../api/UserApi';
-import { render } from '@testing-library/react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import NotifiBox4 from '../../components/component/box/NotifiBox4';
@@ -154,7 +151,7 @@ const SignIn = (pathname) => {
         }}
       >
         {({ isSubmitting }) => (
-          <Card>
+          <Card style={{ boxShadow: 'none' }}>
             <CardBody className="auth">
               <div className="m-sm-4">
                 <div className="text-center">
@@ -202,22 +199,22 @@ const SignIn = (pathname) => {
                       checked={isRememberMe}
                       onChange={(e) => setRememberMe(e.target.checked)}
                     />
-                    <label htmlFor="rememberMe">Remember me next time</label>
+                    <label htmlFor="rememberMe">Remember me</label>
                   </div>
 
                   {/* forgot password */}
                   <p>
                     <Link className="link-router" to="/reset-password">
-                      Forgot password?{'   '}
+                      Quên mật khẩu?{'   '}
                     </Link>
-                    Or
-                    <Link to="/sign-up"> Sign up</Link> here!{' '}
+                    <>Hoặc</>
+                    <Link to="/sign-up"> đăng ký</Link> ngay!{' '}
                   </p>
 
                   {/* submit */}
                   <div className="text-center mt-3">
                     <Button type="submit" className="white-btn" size="lg" disabled={isSubmitting}>
-                      Sign in
+                      Đăng nhập
                     </Button>
                   </div>
                 </Form>
@@ -229,13 +226,13 @@ const SignIn = (pathname) => {
 
       <Modal isOpen={isOpenModal}>
         {/* header */}
-        <ModalHeader>You need to confirm your account</ModalHeader>
+        <ModalHeader></ModalHeader>
 
         {/* body */}
-        <ModalBody className="m-3">
-          <p>Your account is not active.</p>
+        <ModalBody className="m-1">
+          <p>Tài khoản của bạn chưa được kích hoạt</p>
           <p>
-            Please check your email (<b>{email}</b>) to active account.
+            Chúng tôi đã gửi một địa chỉ kích hoạt tài khoản tới email <b>{email}</b> của bạn!.
           </p>
         </ModalBody>
 
@@ -248,12 +245,12 @@ const SignIn = (pathname) => {
             style={{ marginLeft: 10 }}
             disabled={isDisableResendButton}
           >
-            Resend
+            Gửi lại
           </Button>
 
           {/* close button */}
           <Button className="white-btn" onClick={() => handleButtonClick()}>
-            Close
+            Thoát
           </Button>
         </ModalFooter>
       </Modal>

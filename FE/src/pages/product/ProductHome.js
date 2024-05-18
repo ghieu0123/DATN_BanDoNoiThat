@@ -32,12 +32,12 @@ import 'react-toastify/dist/ReactToastify.css';
 import FormatPrice from '../../components/checkprice/FormatPrice';
 import ShoppingCartApi from '../../api/ShoppingCartApi';
 import { selectCartItems } from '../../redux/selectors/CartSelector';
+import { getCartItemAction } from '../../redux/actions/CartAction';
 
 const handleShowSuccessNotification = (message) => {
   toast.success(message, {
-    toastId: 'login-error', // Đặt một toastId cụ thể
     position: 'top-right',
-    autoClose: 3000,
+    autoClose: 500,
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: true,
@@ -54,6 +54,7 @@ function ProductHome(props) {
   const [selectSortValue, setSelectSortValue] = useState('id');
   const [selectSortTypeValue, setSelectTypeValue] = useState('asc');
   const [selectSearchValue, setSearchValue] = useState('');
+  const [count, setCount] = useState(0);
 
   const navigate = useNavigate();
 
@@ -63,6 +64,8 @@ function ProductHome(props) {
 
   const getType = props.getTypeAction;
 
+  const getCartItem = props.getCartItemAction;
+
   const typeData = props.types;
 
   const categoryData = props.category;
@@ -70,7 +73,7 @@ function ProductHome(props) {
   const cartData = props.cartItems;
 
   const isAuthenticated = () => {
-    console.log(Storage.getToken());
+    // console.log(Storage.getToken());
     return Storage.getToken() !== null && Storage.getToken() !== undefined;
   };
 
@@ -101,10 +104,11 @@ function ProductHome(props) {
 
   const handleAddProductToCart = async (productId) => {
     try {
-      if (cartData === null) {
+      const result = await ShoppingCartApi.getShoppingCartByDate();
+      // console.log(result);
+      if (result.id == null) {
         ShoppingCartApi.createCart(productId);
       } else {
-        const result = await ShoppingCartApi.getShoppingCartByDate();
         ShoppingCartApi.addProductToCart(result.id, productId);
       }
       handleShowSuccessNotification('Đã thêm vào giỏ hàng!');
@@ -153,6 +157,12 @@ function ProductHome(props) {
                     <option key="2" value="Mức giá ↓">
                       Mức giá ↓
                     </option>
+                    <option key="1" value="Mới nhất ↑">
+                      Mới nhất ↑
+                    </option>
+                    <option key="2" value="Mới nhất ↓">
+                      Mới nhất ↓
+                    </option>
                   </select>
                   <select id="product-type-select">
                     <option key="0" value="">
@@ -184,6 +194,14 @@ function ProductHome(props) {
                           break;
                         case 'Mức giá ↓':
                           sortField = 'price';
+                          sortType = 'desc';
+                          break;
+                        case 'Mới nhất ↑':
+                          sortField = 'id';
+                          sortType = 'asc';
+                          break;
+                        case 'Mới nhất ↓':
+                          sortField = 'id';
                           sortType = 'desc';
                           break;
                         default:
@@ -322,4 +340,4 @@ const mapGlobalStateToProps = (state) => {
   };
 };
 
-export default connect(mapGlobalStateToProps, { getListProductAction, getTypeAction })(ProductHome);
+export default connect(mapGlobalStateToProps, { getListProductAction, getTypeAction, getCartItemAction })(ProductHome);

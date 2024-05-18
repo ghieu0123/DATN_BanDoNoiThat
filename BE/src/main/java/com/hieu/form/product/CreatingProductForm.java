@@ -33,7 +33,7 @@ public class CreatingProductForm {
 	@NotNull(message = "The price mustn't be null value")
 	private Integer price;
 	
-	@NotBlank(message = "The image mustn't be null value")
+//	@NotBlank(message = "The image mustn't be null value")
 	private String image;
 	
 	private String type;

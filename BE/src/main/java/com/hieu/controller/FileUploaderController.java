@@ -37,7 +37,7 @@ public class FileUploaderController {
 	}
 	@DeleteMapping("/product/{id}")
 	public ResponseEntity<?> deleteProductImage(@PathVariable(name = "id") String id){
-		service.deleteUserFile(id);
+		service.deleteProductFile(id);
 		return new ResponseEntity<>("Delete successfully!",HttpStatus.OK);
 	}
 }

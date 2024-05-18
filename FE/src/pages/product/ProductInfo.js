@@ -46,9 +46,8 @@ let product = {
 
 const handleShowSuccessNotification = (message) => {
   toast.success(message, {
-    toastId: 'login-error', // Đặt một toastId cụ thể
     position: 'top-right',
-    autoClose: 3000,
+    autoClose: 1000,
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: true,

@@ -1,10 +1,10 @@
 package com.hieu.specification.shoporder;
 
+import java.util.Date;
+
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.StringUtils;
-
 import com.hieu.entity.ShopOrder;
-
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 public class ShopOrderSpecification {
 
 	@SuppressWarnings("deprecation")
-	public static Specification<ShopOrder> buildWhere(String filter) {
+	public static Specification<ShopOrder> buildWhere(Date minDate, Date maxDate, String filter) {
 		
 		//khởi tạo where
 		Specification<ShopOrder> where = null;
@@ -28,7 +28,18 @@ public class ShopOrderSpecification {
 			CustomSpecification orderStatus = new CustomSpecification("orderStatus", filter);
 			where = where.and(orderStatus);
 		}
-
+		
+		if (minDate != null) {
+			CustomSpecification minCreatedDate = new CustomSpecification("minDate", minDate);
+			where = where.and(minCreatedDate);
+		}		
+				
+		// max created date
+		if (maxDate != null) {
+			CustomSpecification maxCreatedDate = new CustomSpecification("maxDate", maxDate);
+			where = where.and(maxCreatedDate);
+		}
+		
 		return where;
 	}
 }
@@ -52,6 +63,16 @@ class CustomSpecification implements Specification<ShopOrder>{
 		}
 		if (field.equalsIgnoreCase("orderStatus")) {
 			return criteriaBuilder.equal(root.get("orderStatus"), value);
+		}
+		if (field.equalsIgnoreCase("minDate")) {
+			return criteriaBuilder.greaterThanOrEqualTo(
+					root.get("orderDate").as(java.sql.Date.class),
+					(Date) value);
+		}
+		if (field.equalsIgnoreCase("maxDate")) {
+			return criteriaBuilder.lessThanOrEqualTo(
+					root.get("orderDate").as(java.sql.Date.class),
+					(Date) value);
 		}
 		return null;
 	}

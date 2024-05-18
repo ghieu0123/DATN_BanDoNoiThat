@@ -106,7 +106,7 @@ function Order(props) {
   return (
     <div className="order-container">
       <ToastContainer />
-      <button className="white-btn order-back-btn" onClick={() => navigate('/products')}>
+      <button className="black-btn order-back-btn" onClick={() => navigate('/products')}>
         {'<'}
       </button>
       <h2>Đơn hàng của bạn</h2>
