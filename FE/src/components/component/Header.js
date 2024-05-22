@@ -10,7 +10,7 @@ import { selectCartItems } from '../../redux/selectors/CartSelector';
 import { connect } from 'react-redux';
 import { getCartItemAction } from '../../redux/actions/CartAction';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faRightFromBracket, faRightToBracket, faUserPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPhone, faRightFromBracket, faRightToBracket, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import { faUser } from '@fortawesome/free-regular-svg-icons';
 import { useLocation } from 'react-router-dom';
 const cx = classNames.bind(styles);
@@ -58,6 +58,13 @@ function Header(props) {
   return (
     <div className={cx('wrapper')}>
       <div className={cx('content')}>
+        <div>
+          <p>
+            {' '}
+            <FontAwesomeIcon icon={faPhone} />
+            Hotline: +84123456789
+          </p>
+        </div>
         <div className={cx('action')}>
           {location.pathname.includes('admin') ? (
             <button

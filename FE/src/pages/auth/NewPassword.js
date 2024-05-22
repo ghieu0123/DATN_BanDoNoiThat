@@ -32,7 +32,7 @@ const NewPassword = (props) => {
   };
 
   const redirectToLogin = () => {
-    navigate('/sign-in');
+    navigate('/profile');
   };
 
   return (

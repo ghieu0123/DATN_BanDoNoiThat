@@ -9,6 +9,11 @@
 }
 .content {
   display: flex;
+  p {
+    margin-left: 100px;
+    font-size: 15px;
+    color: #777575;
+  }
 }
 .action {
   position: absolute;
